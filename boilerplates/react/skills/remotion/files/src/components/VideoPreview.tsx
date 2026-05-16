@@ -1,5 +1,5 @@
 import { Player } from '@remotion/player';
-import { MyVideo } from '../video/MyVideo.js';
+import { MyVideo } from '../video/MyVideo'; // no `.js` — Remotion's webpack bundler doesn't honour the TS .js convention
 
 /**
  * In-app preview of the Remotion composition, embedded via @remotion/player.

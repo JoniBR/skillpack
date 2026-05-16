@@ -1,5 +1,5 @@
 import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
-import { Caption } from './Caption.js';
+import { Caption } from './Caption'; // no `.js` — Remotion's webpack bundler doesn't honour the TS .js convention
 
 /**
  * Props are optional so the composition can be referenced from Root.tsx

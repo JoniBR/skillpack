@@ -1,5 +1,10 @@
-import { Composition } from 'remotion';
-import { MyVideo } from './MyVideo.js';
+// Note: imports use bare relative paths (no `.js` extension). Remotion's
+// webpack-based bundler (used by `remotion render`) does NOT honour the
+// TypeScript .js-extension convention; using `./MyVideo.js` here will fail
+// the headless render with "MyVideo.js doesn't exist". Vite handles either
+// form, so the dev server works regardless, but the CLI renderer is strict.
+import { Composition, registerRoot } from 'remotion';
+import { MyVideo } from './MyVideo';
 
 /**
  * Remotion registers compositions via this Root component. Each <Composition />
@@ -27,3 +32,8 @@ export const RemotionRoot = (): JSX.Element => (
     />
   </>
 );
+
+// `registerRoot` is required when `remotion render` / `remotion studio` is
+// pointed at this file as the entry point — without it the CLI errors with
+// "this file does not contain registerRoot". Don't remove this call.
+registerRoot(RemotionRoot);

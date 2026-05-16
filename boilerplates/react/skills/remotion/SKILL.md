@@ -35,14 +35,14 @@ when ready.
 
 ## File layout (this project's conventions)
 
-| Path                              | Role                                                      |
-| --------------------------------- | --------------------------------------------------------- |
+| Path                              | Role                                                         |
+| --------------------------------- | ------------------------------------------------------------ |
 | `src/video/Root.tsx`              | Composition registry. Add new compositions here as siblings. |
-| `src/video/MyVideo.tsx`           | Default composition. Edit this for your reel.             |
-| `src/video/Caption.tsx`           | Bottom-third caption helper used by `MyVideo`.            |
-| `src/components/VideoPreview.tsx` | `<Player />` mounted in `<App />` for live in-app preview. |
-| `remotion.config.ts`              | `remotion render` CLI config.                             |
-| `public/`                         | Static assets — reference with `staticFile('foo.png')`.   |
+| `src/video/MyVideo.tsx`           | Default composition. Edit this for your reel.                |
+| `src/video/Caption.tsx`           | Bottom-third caption helper used by `MyVideo`.               |
+| `src/components/VideoPreview.tsx` | `<Player />` mounted in `<App />` for live in-app preview.   |
+| `remotion.config.ts`              | `remotion render` CLI config.                                |
+| `public/`                         | Static assets — reference with `staticFile('foo.png')`.      |
 
 The Remotion **Studio** (interactive editor) and the Remotion **render**
 CLI both target `src/video/Root.tsx` — never delete or move that file
@@ -50,10 +50,10 @@ without updating both `package.json` scripts.
 
 ## Scripts added by this skill
 
-| Script             | Command                                                            |
-| ------------------ | ------------------------------------------------------------------ |
-| `video:preview`    | `remotion studio src/video/Root.tsx`                               |
-| `video:render`     | `remotion render src/video/Root.tsx MyVideo out/video.mp4`         |
+| Script          | Command                                                    |
+| --------------- | ---------------------------------------------------------- |
+| `video:preview` | `remotion studio src/video/Root.tsx`                       |
+| `video:render`  | `remotion render src/video/Root.tsx MyVideo out/video.mp4` |
 
 In-app preview at `localhost:5173` via the existing `npm run dev` works too.
 
@@ -89,6 +89,22 @@ Concretely, common references the upstream skill points to:
 - `upstream/rules/calculate-metadata.md` — dynamic duration/dimensions.
 - `upstream/rules/voiceover.md` — ElevenLabs TTS.
 - 26 more — see `upstream/SKILL.md` for the full catalogue.
+
+## skillpack-specific pitfalls (found in eval iteration 3)
+
+Two Remotion 4 footguns that fresh agents tend to hit:
+
+1. **`src/video/Root.tsx` must call `registerRoot(RemotionRoot)`.** Without
+   it, `remotion render` fails with `"this file does not contain
+   registerRoot"` (and the error cannot be suppressed from the CLI). Our
+   scaffold already includes this call — don't remove it.
+2. **Use bare relative imports inside `src/video/` (no `.js` extension).**
+   Remotion's webpack-based bundler does NOT honour the TypeScript
+   `.js`-extension-for-TS-files convention; `import { MyVideo } from
+   './MyVideo.js'` fails the headless render with `"MyVideo.js doesn't
+   exist"`. Our scaffold uses bare imports for this reason. Vite (used by
+   the in-app `<Player />` preview) is happy with either form, so the dev
+   server won't surface the bug — only the render does.
 
 ## Hard rules to remember (from upstream)
 

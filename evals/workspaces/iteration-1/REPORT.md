@@ -10,34 +10,34 @@ same prompt (`PROMPT.md`).
 
 ## Results
 
-| Assertion                              | baseline | with_skillpack |
-| -------------------------------------- | :------: | :------------: |
-| Has `Root.tsx` with `<Composition>`    |    ✔    |       ✔       |
-| Uses `useCurrentFrame()`               |    ✔    |       ✔       |
-| `Hello` title appears in source        |    ✔    |       ✔       |
-| One/two/three caption strings present  |    ✔    |       ✔       |
-| `pnpm typecheck` passes                |    ✔    |       ✔       |
-| **Functional pass rate**               |  **5/5** |    **5/5**     |
+| Assertion                             | baseline | with_skillpack |
+| ------------------------------------- | :------: | :------------: |
+| Has `Root.tsx` with `<Composition>`   |    ✔     |       ✔        |
+| Uses `useCurrentFrame()`              |    ✔     |       ✔        |
+| `Hello` title appears in source       |    ✔     |       ✔        |
+| One/two/three caption strings present |    ✔     |       ✔        |
+| `pnpm typecheck` passes               |    ✔     |       ✔        |
+| **Functional pass rate**              | **5/5**  |    **5/5**     |
 
 Both runs produced working, typechecked Remotion compositions matching the
 prompt. The interesting signal is **effort**, not outcome.
 
 ## Effort comparison
 
-| Metric                                | baseline | with_skillpack |
-| ------------------------------------- | -------: | -------------: |
-| Files created by the agent            |        5 |              0 |
-| Files modified by the agent           |        0 |              2 |
-| Setup decisions made                  | many ¹   |      none      |
-| Files in final project (excl. deps)   |        5 |            107 |
+| Metric                              | baseline | with_skillpack |
+| ----------------------------------- | -------: | -------------: |
+| Files created by the agent          |        5 |              0 |
+| Files modified by the agent         |        0 |              2 |
+| Setup decisions made                |   many ¹ |           none |
+| Files in final project (excl. deps) |        5 |            107 |
 
 ¹ Baseline had to choose: React version (picked 19), Remotion version
 (picked 4.0.462), `tsconfig` shape (strict + jsx react-jsx + bundler
 resolution), file layout (`src/index.ts` calling `registerRoot`,
 `src/Root.tsx`, `src/HelloVideo.tsx`), `package.json` scripts
 (`build`, `dev`, `typecheck`), and the registration pattern. None of
-these decisions are wrong; they're just *cognitive load* and *token
-spend* that the with_skillpack run skipped entirely.
+these decisions are wrong; they're just _cognitive load_ and _token
+spend_ that the with_skillpack run skipped entirely.
 
 The with_skillpack run's "edit 2 files" was specifically:
 
@@ -100,9 +100,9 @@ to taste". That's the v0.1 thesis working as designed. The next eval
 should:
 
 1. Use longer, harder prompts (multi-scene reels with audio + captions
-   + transitions — the kind where upstream rules like
-   `audio-visualization.md` and `transitions.md` would *really* save
-   tokens).
+   - transitions — the kind where upstream rules like
+     `audio-visualization.md` and `transitions.md` would _really_ save
+     tokens).
 2. Wire up Anthropic's `run_eval.py` for proper `total_tokens` +
    `duration_ms` capture.
 3. Run ≥3 iterations per condition for a noise estimate.
