@@ -17,5 +17,5 @@ evals/workspaces/*/baseline/
 evals/workspaces/*/with_skillpack/
 evals/workspaces/*/with_skill/
 evals/workspaces/*/without_skill/
-evals/workspaces/
 evals/workspaces/*/upstream_only/
+evals/workspaces/*/skillpack/

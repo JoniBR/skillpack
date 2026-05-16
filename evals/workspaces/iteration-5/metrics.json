@@ -1,0 +1,97 @@
+[
+  {
+    "label": "baseline",
+    "duration_s": 111.018,
+    "cost_usd": 0.20878870000000005,
+    "turns": 22,
+    "input_tokens": 2087,
+    "output_tokens": 5075,
+    "cache_read": 158414,
+    "cache_create": 16774,
+    "render_attempts": 2,
+    "first_render_success": false,
+    "render_history": [
+      [
+        "pnpm render 2>&1",
+        true,
+        "Exit code 1\n\n> remotion-hello-eval@1.0.0 render /Users/yonibr/Personal/sandpack/evals/workspaces/iteration-5/baseline\n> remotion render src/video/Root.tsx MyVideo out/video.mp4\n\nDownloading Chrome Headless Shell https://www.remotion.dev/chrome-headless-shell\nDownloading from: https://storage.googlea"
+      ],
+      [
+        "pnpm render 2>&1",
+        false,
+        "> remotion-hello-eval@1.0.0 render /Users/yonibr/Personal/sandpack/evals/workspaces/iteration-5/baseline\n> remotion render src/video/Root.tsx MyVideo out/video.mp4\n\nBundling 6%\nBundling 12%\nBundling 65%\nBundling 71%\nBundling 76%\nBundling 81%\nBundling 86%\nBundling 91%\nBundling 98%\nBundling 100%\nGetti"
+      ]
+    ],
+    "typecheck_attempts": 3,
+    "mp4s": [
+      [
+        "out/video.mp4",
+        510311
+      ]
+    ],
+    "final_mp4": [
+      "out/video.mp4",
+      510311
+    ]
+  },
+  {
+    "label": "upstream_only",
+    "duration_s": 129.443,
+    "cost_usd": 0.30028199999999994,
+    "turns": 25,
+    "input_tokens": 6213,
+    "output_tokens": 6031,
+    "cache_read": 301040,
+    "cache_create": 23332,
+    "render_attempts": 1,
+    "first_render_success": true,
+    "render_history": [
+      [
+        "mkdir -p out && npx remotion render src/video/Root.tsx MyVideo out/video.mp4 2>&1",
+        false,
+        "Downloading Chrome Headless Shell https://www.remotion.dev/chrome-headless-shell\nGetting Headless Shell - 9.5 Mb/85 Mb\nGetting Headless Shell - 19.1 Mb/85 Mb\nGetting Headless Shell - 28.6 Mb/85 Mb\nGetting Headless Shell - 38.2 Mb/85 Mb\nGetting Headless Shell - 47.7 Mb/85 Mb\nGetting Headless Shell - "
+      ]
+    ],
+    "typecheck_attempts": 3,
+    "mp4s": [
+      [
+        "out/video.mp4",
+        505560
+      ]
+    ],
+    "final_mp4": [
+      "out/video.mp4",
+      505560
+    ]
+  },
+  {
+    "label": "skillpack",
+    "duration_s": 141.288,
+    "cost_usd": 0.25322115,
+    "turns": 26,
+    "input_tokens": 1906,
+    "output_tokens": 5664,
+    "cache_read": 241703,
+    "cache_create": 18823,
+    "render_attempts": 1,
+    "first_render_success": true,
+    "render_history": [
+      [
+        "mkdir -p out && npx remotion render src/video/Root.tsx MyVideo out/video.mp4 2>&1",
+        false,
+        "Downloading Chrome Headless Shell https://www.remotion.dev/chrome-headless-shell\nDownloading from: https://storage.googleapis.com/chrome-for-testing-public/149.0.7790.0/mac-arm64/chrome-headless-shell-mac-arm64.zip\nGetting Headless Shell - 9.5 Mb/93.5 Mb\nGetting Headless Shell - 19.1 Mb/93.5 Mb\nGett"
+      ]
+    ],
+    "typecheck_attempts": 2,
+    "mp4s": [
+      [
+        "out/video.mp4",
+        487398
+      ]
+    ],
+    "final_mp4": [
+      "out/video.mp4",
+      487398
+    ]
+  }
+]
