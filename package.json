@@ -1,0 +1,30 @@
+{
+  "name": "skillpack-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "skillpack: scaffold projects + agent skills in one command.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoniBR/skillpack.git"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "cli": "pnpm --filter @skill-pack/cli exec skillpack",
+    "changeset": "changeset",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "@types/node": "^22.7.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  }
+}

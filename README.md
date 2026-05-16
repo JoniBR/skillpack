@@ -20,7 +20,7 @@ design and [`spec.md`](./spec.md) for the original brief.
 
 ## The pitch
 
-The spec asks: *"eval tokens used and time with and without"* setup boilerplate.
+The spec asks: _"eval tokens used and time with and without"_ setup boilerplate.
 That's the whole product thesis. `skillpack` exists to move the **median agent
 session** towards "the agent built the thing" and away from "the agent set up
 the project, ran out of context, and asked the user to continue tomorrow."
@@ -50,7 +50,7 @@ pnpm add -g skillpack         # or npm / yarn / bun — auto-detected at scaffol
 /plugin install skillpack
 
 # pi extension
-pi extension add @skillpack/pi
+pi extension add @skill-pack/pi
 ```
 
 The host plugins contribute three meta-skills (`skill-creator`,
@@ -72,13 +72,13 @@ skillpack scaffold react remotion confetti
 
 Flags:
 
-| Flag | Default | Meaning |
-| --- | --- | --- |
-| `--into <path>` | cwd if empty | Target directory. |
-| `--no-install` | install | Skip `npm install`. |
-| `--pm <pnpm\|npm\|yarn\|bun>` | auto | Override package-manager detection. |
-| `--host <claude\|pi\|both>` | both | Which agent host(s) to write `SKILL.md`s for. |
-| `--with-eval` | off | After scaffolding, run the bundle eval. |
+| Flag                          | Default      | Meaning                                       |
+| ----------------------------- | ------------ | --------------------------------------------- |
+| `--into <path>`               | cwd if empty | Target directory.                             |
+| `--no-install`                | install      | Skip `npm install`.                           |
+| `--pm <pnpm\|npm\|yarn\|bun>` | auto         | Override package-manager detection.           |
+| `--host <claude\|pi\|both>`   | both         | Which agent host(s) to write `SKILL.md`s for. |
+| `--with-eval`                 | off          | After scaffolding, run the bundle eval.       |
 
 ### Prime a subagent
 
@@ -134,10 +134,24 @@ The `AGENTS.md` primer carries a machine-readable manifest block:
 {
   "schemaVersion": 1,
   "skillpackVersion": "0.1.0",
-  "boilerplate": { "name": "react", "version": "1.2.0", "contentHash": "sha256:…" },
+  "boilerplate": {
+    "name": "react",
+    "version": "1.2.0",
+    "contentHash": "sha256:…"
+  },
   "skills": [
-    { "name": "remotion", "version": "0.4.1", "contentHash": "sha256:…", "source": "bundled" },
-    { "name": "confetti", "version": "0.2.0", "contentHash": "sha256:…", "source": "bundled" }
+    {
+      "name": "remotion",
+      "version": "0.4.1",
+      "contentHash": "sha256:…",
+      "source": "bundled"
+    },
+    {
+      "name": "confetti",
+      "version": "0.2.0",
+      "contentHash": "sha256:…",
+      "source": "bundled"
+    }
   ]
 }
 ```

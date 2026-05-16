@@ -1,0 +1,23 @@
+{
+  "name": "@skill-pack/pi",
+  "version": "0.1.0",
+  "description": "pi extension package for skill-pack: contributes the /skillpack prompt template + meta-skills.",
+  "license": "Apache-2.0",
+  "keywords": ["pi-package", "skillpack", "agent-skills", "scaffolding"],
+  "publishConfig": { "access": "public" },
+  "pi": {
+    "prompts": ["./prompts"],
+    "skills": ["./skills"]
+  },
+  "files": [
+    "prompts/**/*",
+    "skills/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "echo \"(lint: no-op)\"",
+    "typecheck": "echo \"(no ts here)\"",
+    "test": "echo \"(no tests; see CLI package)\"",
+    "build": "node scripts/sync-skills.mjs"
+  }
+}

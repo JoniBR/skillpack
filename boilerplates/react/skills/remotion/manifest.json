@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "name": "remotion",
+  "version": "0.1.0",
+  "description": "Programmatic video composition with Remotion 4, mounted as a preview <Player /> in the React app and rendered headlessly via `npm run video:render`.",
+  "deps": {
+    "remotion": "^4.0.220",
+    "@remotion/cli": "^4.0.220",
+    "@remotion/player": "^4.0.220"
+  },
+  "devDeps": {},
+  "files": [
+    { "from": "files/src/video/Root.tsx", "to": "src/video/Root.tsx" },
+    { "from": "files/src/video/MyVideo.tsx", "to": "src/video/MyVideo.tsx" },
+    { "from": "files/src/video/Caption.tsx", "to": "src/video/Caption.tsx" },
+    { "from": "files/src/components/VideoPreview.tsx", "to": "src/components/VideoPreview.tsx" },
+    { "from": "files/remotion.config.ts", "to": "remotion.config.ts" }
+  ],
+  "jsonPatches": [
+    {
+      "file": "package.json",
+      "merge": {
+        "scripts": {
+          "video:preview": "remotion studio src/video/Root.tsx",
+          "video:render": "remotion render src/video/Root.tsx MyVideo out/video.mp4"
+        }
+      }
+    }
+  ],
+  "markers": [
+    {
+      "file": "src/App.tsx",
+      "marker": "mount",
+      "insert": "<VideoPreview />",
+      "imports": ["import { VideoPreview } from './components/VideoPreview.js';"]
+    }
+  ],
+  "skillMd": "SKILL.md"
+}

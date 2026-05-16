@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "name": "react",
+  "version": "0.1.0",
+  "description": "React + Vite + TypeScript + Vitest starter with skillpack markers wired into App.tsx."
+}

@@ -4,3 +4,10 @@ dist/
 .DS_Store
 *.log
 .skillpack/cache/
+*.tsbuildinfo
+coverage/
+.turbo/
+OPEN-QUESTIONS.md
+
+# pi-lens cache
+.pi-lens/

@@ -1,0 +1,24 @@
+import { Player } from '@remotion/player';
+import { MyVideo } from '../video/MyVideo.js';
+
+/**
+ * In-app preview of the Remotion composition, embedded via @remotion/player.
+ * For headless rendering use `npm run video:render` instead.
+ */
+export function VideoPreview(): JSX.Element {
+  return (
+    <section style={{ marginTop: 24, maxWidth: 640 }}>
+      <h2 style={{ marginBottom: 12 }}>Video preview</h2>
+      <Player
+        component={MyVideo}
+        inputProps={{ title: 'Hello from skillpack' }}
+        durationInFrames={450}
+        compositionWidth={1920}
+        compositionHeight={1080}
+        fps={30}
+        controls
+        style={{ width: '100%', borderRadius: 12, overflow: 'hidden' }}
+      />
+    </section>
+  );
+}

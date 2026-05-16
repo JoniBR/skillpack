@@ -1,0 +1,23 @@
+{
+  "name": "skill-pack",
+  "owner": {
+    "name": "JoniBR",
+    "url": "https://github.com/JoniBR"
+  },
+  "metadata": {
+    "description": "Scaffold projects + agent skills in one command.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "skill-pack",
+      "description": "Scaffold a working project + a curated set of agent skills in one command, so the agent can spend its tokens on application logic instead of setup. Ships with the `react` boilerplate and the `remotion` skill out of the box, plus authoring meta-skills (`skill-creator`, etc.).",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./meta-skills/skill-creator",
+        "./vendor/anthropic-skill-creator"
+      ]
+    }
+  ]
+}
