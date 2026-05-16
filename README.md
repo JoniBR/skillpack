@@ -26,14 +26,14 @@ successful headless render to MP4."
 
 Three fresh `claude -p` agents in parallel, `claude-sonnet-4-6`:
 
-| Cell | First-attempt render | Cost | Output tokens | MP4 |
-| --- | :---: | ---: | ---: | --- |
-| `baseline` (empty cwd) | ✗ (recovered on 2nd try) | $0.209 | 6 420 | [baseline.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB) |
-| `upstream_only` (Remotion team's skill, no scaffold) | ✓ | $0.300 | 5 529 | [upstream_only.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) |
-| **`skillpack` v0.2.1** (scaffold + footgun-fixed skill) | ✓ | **$0.253** | **4 907** | [skillpack.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB) |
+| Cell                                                    |   First-attempt render   |       Cost | Output tokens | MP4                                                                                                                      |
+| ------------------------------------------------------- | :----------------------: | ---------: | ------------: | ------------------------------------------------------------------------------------------------------------------------ |
+| `baseline` (empty cwd)                                  | ✗ (recovered on 2nd try) |     $0.209 |         6 420 | [baseline.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB)           |
+| `upstream_only` (Remotion team's skill, no scaffold)    |            ✓             |     $0.300 |         5 529 | [upstream_only.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) |
+| **`skillpack` v0.2.1** (scaffold + footgun-fixed skill) |            ✓             | **$0.253** |     **4 907** | [skillpack.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB)         |
 
 **Skillpack is the only cell that is Pareto-optimal** on this prompt: cheapest
-*and* first-attempt render success *and* lowest output token spend. Baseline is
+_and_ first-attempt render success _and_ lowest output token spend. Baseline is
 faster wall-clock but blew a Chrome download + bundle cycle on a failed first
 render (React 19 + Remotion-headless flake) before recovering. The Remotion
 team's own official skill (`upstream_only`) gets to first-attempt render via

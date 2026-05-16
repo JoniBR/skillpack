@@ -11,24 +11,24 @@ plus three sequenced captions. Verification REQUIRED `pnpm install`,
 
 ## Three cells
 
-| Cell | Starting state |
-| --- | --- |
-| `baseline` | Empty `cwd`. No skill, no scaffold. Agent designs everything from scratch. |
+| Cell            | Starting state                                                                                                                                                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `baseline`      | Empty `cwd`. No skill, no scaffold. Agent designs everything from scratch.                                                                                                                                                                     |
 | `upstream_only` | Empty `cwd` **except** `.claude/skills/remotion/` containing the Remotion team's own [`SKILL.md`](https://github.com/remotion-dev/skills/blob/main/skills/remotion/SKILL.md) + its 36-rule reference tree. No project files. No footgun fixes. |
-| `skillpack` | `skillpack scaffold react remotion` pre-run (no install). Full Vite+TS+Vitest project, `<VideoPreview/>` mounted, `video:render` script wired, skillpack-wrapped Remotion skill (v0.2.1) with footgun fixes baked in. |
+| `skillpack`     | `skillpack scaffold react remotion` pre-run (no install). Full Vite+TS+Vitest project, `<VideoPreview/>` mounted, `video:render` script wired, skillpack-wrapped Remotion skill (v0.2.1) with footgun fixes baked in.                          |
 
 ## Results
 
-| Metric | baseline | upstream_only | skillpack |
-| --- | ---: | ---: | ---: |
-| Render attempts | 2 | 1 | 1 |
-| **First-attempt render success** | ✗ | ✓ | ✓ |
-| Final MP4 (downloadable) | [`baseline.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB) | [`upstream_only.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) | [`skillpack.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB) |
-| Turns | 22 | 25 | 26 |
-| Wall-clock | 111 s | 129 s | 141 s |
-| Cost | $0.209 | $0.300 | $0.253 |
-| Cache-read tokens | 304 531 | 339 083 | 167 574 |
-| Output tokens | 6 420 | 5 529 | 4 907 |
+| Metric                           |                                                                                                         baseline |                                                                                                              upstream_only |                                                                                                          skillpack |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------: | -----------------------------------------------------------------------------------------------------------------: |
+| Render attempts                  |                                                                                                                2 |                                                                                                                          1 |                                                                                                                  1 |
+| **First-attempt render success** |                                                                                                                ✗ |                                                                                                                          ✓ |                                                                                                                  ✓ |
+| Final MP4 (downloadable)         | [`baseline.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB) | [`upstream_only.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) | [`skillpack.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB) |
+| Turns                            |                                                                                                               22 |                                                                                                                         25 |                                                                                                                 26 |
+| Wall-clock                       |                                                                                                            111 s |                                                                                                                      129 s |                                                                                                              141 s |
+| Cost                             |                                                                                                           $0.209 |                                                                                                                     $0.300 |                                                                                                             $0.253 |
+| Cache-read tokens                |                                                                                                          304 531 |                                                                                                                    339 083 |                                                                                                            167 574 |
+| Output tokens                    |                                                                                                            6 420 |                                                                                                                      5 529 |                                                                                                              4 907 |
 
 ## What `baseline`'s first render failed on
 
@@ -44,7 +44,7 @@ have a known transient where Chrome's first connection times out; the
 second attempt (Chrome now cached) succeeds. This is exactly the kind of
 ecosystem-knowledge gap a skill saves you from — but neither the upstream
 skill nor skillpack's wrapper explicitly call out the React 18 pin. They
-just *use* React 18 by convention, which sidesteps the issue.
+just _use_ React 18 by convention, which sidesteps the issue.
 
 ## What the upstream Remotion skill saved vs. baseline
 
@@ -57,12 +57,12 @@ content, nothing else. Effects compared to `baseline`:
   task. The skill body + rules add reading overhead the small task can't
   amortise.
 - ✓ Cleaner, more idiomatic output (used `npx create-video --blank
-  --no-tailwind`, idiomatic Remotion conventions).
+--no-tailwind`, idiomatic Remotion conventions).
 
 ## What `skillpack` (v0.2.1) added on top of `upstream_only`
 
 - ✓ Lowest output tokens (4 907 vs 5 529 vs 6 420) and lowest cache-read
-  (167k vs 339k vs 304k) — the pre-built scaffold means less *exploration*
+  (167k vs 339k vs 304k) — the pre-built scaffold means less _exploration_
   per turn even though the project tree is bigger.
 - ✓ First-attempt render success (footgun fixes in our `Root.tsx` template:
   pre-calls `registerRoot`, uses bare imports — see commit
@@ -71,7 +71,7 @@ content, nothing else. Effects compared to `baseline`:
   upstream_only doesn't have to do project setup either after running
   `create-video`. Skillpack's advantage here is mostly that the agent
   doesn't need to read the upstream rule tree to know what to do — the
-  scaffold *is* the answer.
+  scaffold _is_ the answer.
 - ✗ Highest wall-clock (141 s vs 129 s vs 111 s) — `pnpm install` of 340
   packages dominated; baseline's smaller dep tree installed faster. Wall
   clock here mostly tracks install time, not agent work.
@@ -79,7 +79,7 @@ content, nothing else. Effects compared to `baseline`:
 ## Headline takeaways
 
 1. **Skillpack achieved the only Pareto improvement on this prompt:**
-   cheapest *and* first-attempt-render-success *and* lowest output token
+   cheapest _and_ first-attempt-render-success _and_ lowest output token
    spend. (baseline beats it on wall-clock, but at the cost of a failed
    first render attempt.)
 

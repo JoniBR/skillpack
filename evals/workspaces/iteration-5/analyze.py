@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Parse claude -p stream-json output, extract render-attempt + summary metrics."""
+
 import json
 import re
 from pathlib import Path
@@ -13,14 +14,17 @@ RENDER_PAT = re.compile(
     re.IGNORECASE,
 )
 # Patterns that strongly hint a TYPECHECK call
-TYPECHECK_PAT = re.compile(r"(pnpm typecheck|npm run typecheck|tsc --noEmit|tsc -b)", re.IGNORECASE)
+TYPECHECK_PAT = re.compile(
+    r"(pnpm typecheck|npm run typecheck|tsc --noEmit|tsc -b)", re.IGNORECASE
+)
 
 
-RUNNER_PREFIXES = {'remotion', 'npx', 'pnpm', 'npm', 'yarn', 'bun', 'pnpx'}
+RUNNER_PREFIXES = {"remotion", "npx", "pnpm", "npm", "yarn", "bun", "pnpx"}
 # Broader render pattern: explicit `remotion render`, `video:render`, or any
 # `<runner> render` (e.g. baseline's `pnpm render` script).
 RENDER_INVOCATION_PAT = re.compile(
-    r'(remotion render|video:render|\brender\b)', re.IGNORECASE,
+    r"(remotion render|video:render|\brender\b)",
+    re.IGNORECASE,
 )
 
 
@@ -28,12 +32,12 @@ def is_real_render_invocation(cmd: str) -> bool:
     """True iff the command actually invokes a video render (npx remotion render,
     pnpm video:render, or a custom `<runner> render` script), not a heredoc or
     `cat >` whose body happens to include those strings."""
-    head = cmd.lstrip().split('\n', 1)[0].strip()
-    if head.startswith(('cat ', 'printf', 'echo ', 'tee ', 'jq ', 'sed ', 'awk ')):
+    head = cmd.lstrip().split("\n", 1)[0].strip()
+    if head.startswith(("cat ", "printf", "echo ", "tee ", "jq ", "sed ", "awk ")):
         return False
-    segments = re.split(r'(?:&&|\|\||;|\n)', cmd)
+    segments = re.split(r"(?:&&|\|\||;|\n)", cmd)
     for seg in segments:
-        s = re.sub(r'^(?:[A-Z_]+=\S+\s+)+', '', seg.strip())
+        s = re.sub(r"^(?:[A-Z_]+=\S+\s+)+", "", seg.strip())
         parts = s.split()
         if not parts:
             continue
@@ -41,7 +45,7 @@ def is_real_render_invocation(cmd: str) -> bool:
         if first not in RUNNER_PREFIXES:
             continue
         # `pnpm render`, `pnpm run render`, `npm run video:render`, `npx remotion render`, etc.
-        rest = ' '.join(parts[1:])
+        rest = " ".join(parts[1:])
         if RENDER_INVOCATION_PAT.search(rest) or RENDER_INVOCATION_PAT.search(s):
             return True
     return False
@@ -84,7 +88,8 @@ def analyze(label: str):
                 content = block.get("content", "")
                 if isinstance(content, list):
                     content = " ".join(
-                        c.get("text", "") if isinstance(c, dict) else str(c) for c in content
+                        c.get("text", "") if isinstance(c, dict) else str(c)
+                        for c in content
                     )
                 is_error = bool(block.get("is_error"))
                 if is_real_render_invocation(cmd):
@@ -93,9 +98,7 @@ def analyze(label: str):
                     typecheck_attempts.append((cmd, is_error))
 
     # Final summary
-    result_ev = next(
-        (e for e in reversed(stream) if e.get("type") == "result"), None
-    )
+    result_ev = next((e for e in reversed(stream) if e.get("type") == "result"), None)
     usage = (result_ev or {}).get("usage", {}) if result_ev else {}
 
     # MP4 existence anywhere under the cell dir
@@ -132,14 +135,12 @@ def main():
     out.write_text(json.dumps(results, indent=2, default=str))
 
     # Print table
-    print(f"\n{'cell':<16}{'turns':>7}{'render#':>9}{'1st-ok':>8}{'mp4':>14}{'cost':>9}{'dur_s':>8}")
+    print(
+        f"\n{'cell':<16}{'turns':>7}{'render#':>9}{'1st-ok':>8}{'mp4':>14}{'cost':>9}{'dur_s':>8}"
+    )
     print("-" * 80)
     for r in results:
-        mp4 = (
-            f"{r['final_mp4'][1]//1024} KB"
-            if r["final_mp4"]
-            else "MISSING"
-        )
+        mp4 = f"{r['final_mp4'][1] // 1024} KB" if r["final_mp4"] else "MISSING"
         print(
             f"{r['label']:<16}"
             f"{r['turns']:>7}"

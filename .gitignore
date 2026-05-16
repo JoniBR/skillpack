@@ -19,3 +19,5 @@ evals/workspaces/*/with_skill/
 evals/workspaces/*/without_skill/
 evals/workspaces/*/upstream_only/
 evals/workspaces/*/skillpack/
+evals/workspaces/*/*.stderr
+evals/workspaces/*/*.wall_ms
