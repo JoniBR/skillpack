@@ -96,13 +96,13 @@ Two Remotion 4 footguns that fresh agents tend to hit:
 
 1. **`src/video/Root.tsx` must call `registerRoot(RemotionRoot)`.** Without
    it, `remotion render` fails with `"this file does not contain
-   registerRoot"` (and the error cannot be suppressed from the CLI). Our
+registerRoot"` (and the error cannot be suppressed from the CLI). Our
    scaffold already includes this call — don't remove it.
 2. **Use bare relative imports inside `src/video/` (no `.js` extension).**
    Remotion's webpack-based bundler does NOT honour the TypeScript
    `.js`-extension-for-TS-files convention; `import { MyVideo } from
-   './MyVideo.js'` fails the headless render with `"MyVideo.js doesn't
-   exist"`. Our scaffold uses bare imports for this reason. Vite (used by
+'./MyVideo.js'` fails the headless render with `"MyVideo.js doesn't
+exist"`. Our scaffold uses bare imports for this reason. Vite (used by
    the in-app `<Player />` preview) is happy with either form, so the dev
    server won't surface the bug — only the render does.
 

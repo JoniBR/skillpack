@@ -14,7 +14,34 @@ that load on demand. The agent reads what it needs, when it needs it. No more
 burning a fifth of the context window on "how do I wire up Remotion again?"
 
 **Status:** v0.1 in progress. See [`DESIGN.md`](./DESIGN.md) for the full
-design and [`spec.md`](./spec.md) for the original brief.
+design.
+
+---
+
+## Headline result — react + remotion bundle eval (iter-5, three-way)
+
+Identical prompt: "build a 10-second Remotion video with a `Hello` title fade-in
+and three sequenced captions; verify with `pnpm install`, `pnpm typecheck`, AND a
+successful headless render to MP4."
+
+Three fresh `claude -p` agents in parallel, `claude-sonnet-4-6`:
+
+| Cell | First-attempt render | Cost | Output tokens | MP4 |
+| --- | :---: | ---: | ---: | --- |
+| `baseline` (empty cwd) | ✗ (recovered on 2nd try) | $0.209 | 6 420 | [baseline.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB) |
+| `upstream_only` (Remotion team's skill, no scaffold) | ✓ | $0.300 | 5 529 | [upstream_only.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) |
+| **`skillpack` v0.2.1** (scaffold + footgun-fixed skill) | ✓ | **$0.253** | **4 907** | [skillpack.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB) |
+
+**Skillpack is the only cell that is Pareto-optimal** on this prompt: cheapest
+*and* first-attempt render success *and* lowest output token spend. Baseline is
+faster wall-clock but blew a Chrome download + bundle cycle on a failed first
+render (React 19 + Remotion-headless flake) before recovering. The Remotion
+team's own official skill (`upstream_only`) gets to first-attempt render via
+`npx create-video` but costs more in tokens and dollars than baseline on this
+scale of task.
+
+Full writeup, methodology, caveats, and downloadable MP4s:
+[`evals/workspaces/iteration-5/REPORT.md`](./evals/workspaces/iteration-5/REPORT.md).
 
 ---
 
