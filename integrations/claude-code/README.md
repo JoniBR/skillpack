@@ -28,4 +28,4 @@ npm i -g @skill-pack/cli     # or pnpm / yarn / bun add -g
 
 ## License
 
-Apache-2.0.
+MIT (vendored Anthropic skill-creator remains Apache-2.0; see root LICENSE).

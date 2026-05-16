@@ -2,7 +2,7 @@
   "name": "@skill-pack/cli",
   "version": "0.1.0",
   "description": "Scaffold projects + agent skills in one command.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "skillpack": "./dist/bin/skillpack.js"

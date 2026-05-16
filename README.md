@@ -224,7 +224,9 @@ skillpack/
 
 ## License
 
-TBD (likely Apache-2.0 to match the vendored Anthropic scripts' licensing).
+[MIT](./LICENSE). The vendored Anthropic `skill-creator` under
+`vendor/anthropic-skill-creator/` remains under its original Apache-2.0
+license (preserved as `LICENSE.txt` in that directory).
 
 ## Acknowledgements
 

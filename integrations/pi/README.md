@@ -37,4 +37,4 @@ npm i -g @skill-pack/cli
 
 ## License
 
-Apache-2.0.
+MIT (vendored Anthropic skill-creator remains Apache-2.0; see root LICENSE).
