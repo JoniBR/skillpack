@@ -13,3 +13,7 @@ OPEN-QUESTIONS.md
 .pi-lens/
 evals/workspaces/*/node_modules/
 evals/workspaces/*/.git/
+evals/workspaces/*/baseline/
+evals/workspaces/*/with_skillpack/
+evals/workspaces/*/with_skill/
+evals/workspaces/*/without_skill/
