@@ -11,3 +11,5 @@ OPEN-QUESTIONS.md
 
 # pi-lens cache
 .pi-lens/
+evals/workspaces/*/node_modules/
+evals/workspaces/*/.git/
