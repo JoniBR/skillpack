@@ -12,7 +12,7 @@ visible frame. To go from time to frames, multiply by `fps`:
 
 ```ts
 const { fps } = useVideoConfig();
-const oneSecond  = fps;          // e.g. 30
+const oneSecond = fps; // e.g. 30
 const halfSecond = fps / 2;
 ```
 
@@ -32,12 +32,11 @@ Linear by default. Common opts:
 import { interpolate, Easing } from 'remotion';
 
 // Fade in 0..30, hold, fade out 120..150.
-const opacity = interpolate(
-  frame,
-  [0, 30, 120, 150],
-  [0, 1, 1, 0],
-  { easing: Easing.bezier(.4, 0, .2, 1), extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
-);
+const opacity = interpolate(frame, [0, 30, 120, 150], [0, 1, 1, 0], {
+  easing: Easing.bezier(0.4, 0, 0.2, 1),
+  extrapolateLeft: 'clamp',
+  extrapolateRight: 'clamp',
+});
 ```
 
 The input array MUST be strictly increasing — duplicate frames will throw

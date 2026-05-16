@@ -14,7 +14,15 @@
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, relative, sep } from 'node:path';
 import { renderAgentsMd } from './agents-md.js';
-import { copyTree, ensureDir, fileExists, isDirEmpty, listFiles, readText, writeText } from './fs-utils.js';
+import {
+  copyTree,
+  ensureDir,
+  fileExists,
+  isDirEmpty,
+  listFiles,
+  readText,
+  writeText,
+} from './fs-utils.js';
 import { gitCommitAll, gitInit } from './git.js';
 import { hashDirectory, sha256 } from './hash.js';
 import { deepMerge } from './json-merge.js';
@@ -163,17 +171,27 @@ export function scaffold(opts: ScaffoldOptions): ScaffoldResult {
       writeText(dest, readText(baseSkillMd));
     }
   }
+  // Skill-directory aux contents to copy alongside SKILL.md. Anything in the
+  // skill dir that isn't `files/`, `manifest.json`, or the skillMd itself is
+  // treated as agent-facing reference material and ships through.
+  const SKILL_AUX_SKIP = new Set(['files', 'manifest.json']);
   for (const skill of skills) {
-    const src = join(skill.dir, skill.manifest.skillMd ?? 'SKILL.md');
-    const refDir = join(skill.dir, 'references');
+    const skillMdName = skill.manifest.skillMd ?? 'SKILL.md';
+    const src = join(skill.dir, skillMdName);
     if (!existsSync(src)) {
       throw new Error(`Skill "${skill.name}" is missing its SKILL.md at ${src}`);
     }
+    const auxEntries = readdirSync(skill.dir).filter(
+      (n) => !SKILL_AUX_SKIP.has(n) && n !== skillMdName,
+    );
     for (const t of targets) {
       const skillDir = join(t.dir, `${bp.name}-${skill.name}`);
       writeText(join(skillDir, 'SKILL.md'), readText(src));
-      if (existsSync(refDir)) {
-        copyTree(refDir, join(skillDir, 'references'));
+      for (const name of auxEntries) {
+        const from = join(skill.dir, name);
+        if (statSync(from).isDirectory()) {
+          copyTree(from, join(skillDir, name));
+        }
       }
     }
   }
@@ -217,7 +235,10 @@ export function scaffold(opts: ScaffoldOptions): ScaffoldResult {
   }
 
   gitInit(target);
-  gitCommitAll(target, `chore: scaffold via skillpack ${bp.name} ${skills.map((s) => s.name).join(' ')}`.trim());
+  gitCommitAll(
+    target,
+    `chore: scaffold via skillpack ${bp.name} ${skills.map((s) => s.name).join(' ')}`.trim(),
+  );
 
   return { projectDir: target, pm, boilerplate: bp, skills, manifest };
 }
@@ -257,9 +278,7 @@ function listDirShallow(dir: string): string[] {
   return readdirSync(dir);
 }
 
-function derivePackageScripts(
-  projectDir: string,
-): Array<{ name: string; description: string }> {
+function derivePackageScripts(projectDir: string): Array<{ name: string; description: string }> {
   const pkgPath = join(projectDir, 'package.json');
   if (!existsSync(pkgPath)) return [];
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as { scripts?: Record<string, string> };

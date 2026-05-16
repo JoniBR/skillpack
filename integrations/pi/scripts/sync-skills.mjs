@@ -15,7 +15,10 @@ const pkgRoot = resolve(here, '..');
 const monorepoRoot = resolve(pkgRoot, '..', '..');
 
 const sources = [
-  { from: join(monorepoRoot, 'meta-skills', 'skill-creator'), to: join(pkgRoot, 'skills', 'skill-creator') },
+  {
+    from: join(monorepoRoot, 'meta-skills', 'skill-creator'),
+    to: join(pkgRoot, 'skills', 'skill-creator'),
+  },
   // Add boilerplate-creator and skill-migrator here when they exist (v0.2/v0.3).
 ];
 

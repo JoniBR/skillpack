@@ -35,7 +35,7 @@ structure. The loop is:
    working project.
 5. **(Optional, recommended) Run the evaluation loop** — parallel
    with-skill vs. baseline subagents on realistic prompts, capture tokens
-   + duration + grading, iterate on feedback.
+   - duration + grading, iterate on feedback.
 6. **Land** — either as a local overlay under `~/.skill-pack/skills/` (the
    default), or as a contribution to the upstream repo (`--contribute`).
 
@@ -44,14 +44,14 @@ structure. The loop is:
 Before doing any work, get clear answers to:
 
 - **Boilerplate.** Which boilerplate is the host? (`skillpack list
-  boilerplates` to see options.) If the user names a boilerplate that
+boilerplates` to see options.) If the user names a boilerplate that
   doesn't exist, switch to the `skillpack-boilerplate-creator` skill
   first (DESIGN.md Q9c → B′).
 - **Skill name.** Short, kebab-case, the library's canonical name when
   possible (`tanstack-query`, not `react-query-v5`).
 - **What does this skill enable?** Describe in 1-2 sentences.
 - **When should it trigger?** Concrete user phrasings — these will inform
-  the `description` frontmatter, which is the *primary* triggering
+  the `description` frontmatter, which is the _primary_ triggering
   mechanism for agents picking skills.
 - **Compatibility constraints.** Does this require a specific Node
   version? A specific bundler? Note in `SKILL.md`'s preamble.
@@ -102,7 +102,7 @@ The dropped `SKILL.md` is the user-project's agent-facing documentation
 for this skill, loaded **on demand** (progressive disclosure). Keep it
 under ~150 lines. Structure:
 
-1. **Frontmatter** — `name: <bp>-<skill>` and a *pushy* `description` (see
+1. **Frontmatter** — `name: <bp>-<skill>` and a _pushy_ `description` (see
    Anthropic's guidance: "Make sure to use this skill whenever the user
    mentions X, even if they don't explicitly ask for 'X'"). The
    description is the primary triggering mechanism.
@@ -150,7 +150,7 @@ Adapted from Anthropic's skill-creator (vendored at
   absent. Tests whether the SKILL.md you wrote actually helps the agent.
 - **Bundle eval.** Run the same task in an empty cwd (agent has to set
   up everything from scratch) vs. starting from
-  `skillpack scaffold <bp> <skill>`. Tests whether the *whole package*
+  `skillpack scaffold <bp> <skill>`. Tests whether the _whole package_
   (boilerplate + skill + AGENTS.md) saves the agent time and tokens.
 
 For the per-skill loop, follow Anthropic's vendored instructions
@@ -163,8 +163,8 @@ key mechanics:
    one without (or with the previous iteration). Save outputs to
    `<workspace>/iteration-N/eval-K/{with_skill,without_skill}/`.
 3. Capture `total_tokens` + `duration_ms` from each task notification
-   into `timing.json`. *This is the only opportunity to capture this
-   data.*
+   into `timing.json`. _This is the only opportunity to capture this
+   data._
 4. Spawn a grader subagent reading
    `vendor/anthropic-skill-creator/agents/grader.md` to evaluate each
    assertion; save to `grading.json`.
@@ -209,11 +209,11 @@ that enumerate concrete user phrasings:
 > Bad: `"Adds Stripe checkout to the project."`
 >
 > Good: `"Add Stripe checkout, subscriptions, billing portal, or webhook
-> handling to this Next.js project. Use whenever the user mentions
-> Stripe, billing, payments, subscriptions, paywalls, or 'taking
-> money', even if they don't explicitly name Stripe. Includes the
-> webhook route, the Checkout session helper, the customer-portal
-> link, and TypeScript types for products/prices."`
+handling to this Next.js project. Use whenever the user mentions
+Stripe, billing, payments, subscriptions, paywalls, or 'taking
+money', even if they don't explicitly name Stripe. Includes the
+webhook route, the Checkout session helper, the customer-portal
+link, and TypeScript types for products/prices."`
 
 After the eval loop has converged on a SKILL.md you're happy with,
 optionally run Anthropic's description optimiser

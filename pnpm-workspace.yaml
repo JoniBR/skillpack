@@ -1,4 +1,4 @@
 packages:
-  - "packages/*"
-  - "integrations/*"
-  - "meta-skills/*"
+  - 'packages/*'
+  - 'integrations/*'
+  - 'meta-skills/*'

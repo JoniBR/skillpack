@@ -26,13 +26,13 @@ Confetti, etc.) can layer cleanly onto a single `App.tsx`.
 
 ## Scripts
 
-| Script          | What it does                                |
-| --------------- | ------------------------------------------- |
-| `dev`           | Vite dev server on `:5173`                  |
-| `build`         | `tsc -b && vite build` (typecheck + bundle) |
-| `preview`       | Preview the production build                |
-| `test`          | Vitest, jsdom env, RTL setup                |
-| `typecheck`     | `tsc -b --noEmit`                           |
+| Script      | What it does                                |
+| ----------- | ------------------------------------------- |
+| `dev`       | Vite dev server on `:5173`                  |
+| `build`     | `tsc -b && vite build` (typecheck + bundle) |
+| `preview`   | Preview the production build                |
+| `test`      | Vitest, jsdom env, RTL setup                |
+| `typecheck` | `tsc -b --noEmit`                           |
 
 ## Testing
 
@@ -66,7 +66,9 @@ export function useDocumentTitle(title: string): void {
   useEffect(() => {
     const prev = document.title;
     document.title = title;
-    return () => { document.title = prev; };
+    return () => {
+      document.title = prev;
+    };
   }, [title]);
 }
 ```
@@ -76,4 +78,4 @@ export function useDocumentTitle(title: string): void {
 Read the per-skill SKILL.md for the libraries that are installed. The list is
 in `AGENTS.md` at the project root. Each skill ships its own conventions and
 snippet cheatsheet; trust those over generic React docs since they are tuned
-to *this* project's layout.
+to _this_ project's layout.

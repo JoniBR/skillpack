@@ -1,133 +1,112 @@
 ---
 name: react-remotion
-description: Programmatic video composition with Remotion 4 in this React project. Use whenever the user wants to create, edit, or render a video — animated reels, product feature trailers, motion-graphics captions, or anything composed as React components and rendered as MP4. This skill is wired specifically for the skillpack react boilerplate.
+description: Programmatic video composition with Remotion 4 in this React project. Use whenever the user wants to create, edit, or render a video — product reels, animated trailers, motion graphics, social cuts, captioned tutorials, anything composed as React components and rendered as MP4. This skill wraps the canonical Remotion team's `remotion-best-practices` skill (under `upstream/`) and explains how it's wired into this specific skillpack-scaffolded project. Use this skill instead of generic React advice whenever Remotion files are involved.
 ---
 
 # Remotion (skillpack react skill)
 
-[Remotion](https://www.remotion.dev) is React for video: you build
-compositions out of React components, drive them with `useCurrentFrame()`
-and `useVideoConfig()`, and either preview them in-app via `<Player />` or
-render them headlessly to MP4 via the `remotion` CLI.
+[Remotion](https://www.remotion.dev) is React for video. This skill is the
+**skillpack-react adapter** around the Remotion team's own canonical skill,
+which lives under `upstream/SKILL.md` + `upstream/rules/*.md`. The upstream
+material is the source of truth for Remotion API knowledge; this file is a
+thin preamble explaining what skillpack already set up for you and where
+things are.
+
+## What's already done for you
+
+skillpack scaffolded a working Remotion setup. You **do not** need to run
+`npx create-video@latest` (the upstream skill mentions it under "New
+project setup" — skip that step). Specifically, the scaffold has already:
+
+- Installed `remotion`, `@remotion/cli`, `@remotion/player`, and
+  `@remotion/media`.
+- Registered `MyVideo` as a `<Composition />` in `src/video/Root.tsx`.
+- Mounted a live preview at the React app's home page via
+  `src/components/VideoPreview.tsx` (using `@remotion/player`).
+- Added `npm run video:preview` (opens Remotion Studio) and
+  `npm run video:render` (renders headlessly to `out/video.mp4`).
+- Configured `remotion.config.ts` with sensible defaults
+  (`setVideoImageFormat('jpeg')`, `setOverwriteOutput(true)`).
+
+So the typical first session looks like: edit `src/video/MyVideo.tsx`,
+preview at `localhost:5173` (in-app `<Player />`) or
+`npm run video:preview` (Remotion Studio), then `npm run video:render`
+when ready.
 
 ## File layout (this project's conventions)
 
-| Path                              | Role                                                  |
-| --------------------------------- | ----------------------------------------------------- |
-| `src/video/Root.tsx`              | Composition registry. Add new compositions here.      |
-| `src/video/MyVideo.tsx`           | Default 15s composition. Edit this for your reel.     |
-| `src/video/Caption.tsx`           | Bottom-third caption used by `MyVideo`.               |
-| `src/components/VideoPreview.tsx` | `<Player />` mounted in `<App />` for live preview.   |
-| `remotion.config.ts`              | `remotion render` CLI config.                         |
+| Path                              | Role                                                      |
+| --------------------------------- | --------------------------------------------------------- |
+| `src/video/Root.tsx`              | Composition registry. Add new compositions here as siblings. |
+| `src/video/MyVideo.tsx`           | Default composition. Edit this for your reel.             |
+| `src/video/Caption.tsx`           | Bottom-third caption helper used by `MyVideo`.            |
+| `src/components/VideoPreview.tsx` | `<Player />` mounted in `<App />` for live in-app preview. |
+| `remotion.config.ts`              | `remotion render` CLI config.                             |
+| `public/`                         | Static assets — reference with `staticFile('foo.png')`.   |
 
 The Remotion **Studio** (interactive editor) and the Remotion **render**
 CLI both target `src/video/Root.tsx` — never delete or move that file
 without updating both `package.json` scripts.
 
-## Scripts (added by this skill)
+## Scripts added by this skill
 
-| Script             | Command                                                         |
-| ------------------ | --------------------------------------------------------------- |
-| `video:preview`    | `remotion studio src/video/Root.tsx`                            |
-| `video:render`     | `remotion render src/video/Root.tsx MyVideo out/video.mp4`      |
+| Script             | Command                                                            |
+| ------------------ | ------------------------------------------------------------------ |
+| `video:preview`    | `remotion studio src/video/Root.tsx`                               |
+| `video:render`     | `remotion render src/video/Root.tsx MyVideo out/video.mp4`         |
 
-Plus the in-app preview at `localhost:5173` via `<VideoPreview />`, which is
-already mounted in `<App />` by this skill.
+In-app preview at `localhost:5173` via the existing `npm run dev` works too.
 
-## Core API cheatsheet
+## Default composition geometry
 
-**A composition** (`src/video/Root.tsx`):
+`MyVideo` is registered at **1080×1080, 30 fps, 450 frames (15s)** in
+`Root.tsx`. Adjust freely. Common preset swaps:
 
-```tsx
-<Composition
-  id="MyVideo"                // referenced by `remotion render <id>`
-  component={MyVideo}
-  durationInFrames={450}      // 15s @ 30fps
-  fps={30}
-  width={1920}
-  height={1080}
-  defaultProps={{ title: 'Hello' }}
-/>
-```
+- 1080p landscape: `width={1920} height={1080}`
+- Vertical / Reels / Shorts: `width={1080} height={1920}`
+- Square (current default): `width={1080} height={1080}`
 
-**A scene component** uses `useCurrentFrame` + `useVideoConfig`:
+## How to use the upstream skill
 
-```tsx
-const frame = useCurrentFrame();
-const { fps, durationInFrames } = useVideoConfig();
-```
+For everything about the Remotion API itself — animations, timing,
+sequencing, audio, captions, fonts, transitions, 3D, FFmpeg, etc. —
+**load `upstream/SKILL.md`** (it's tightly written and short), then load
+specific `upstream/rules/*.md` files as the task requires. The upstream
+SKILL.md ends with a long table of "see `rules/X.md` for Y" pointers;
+that's the routing index.
 
-**Timing animations** — prefer `interpolate` for linear/clamped curves
-and `spring` for physical eases:
+Concretely, common references the upstream skill points to:
 
-```tsx
-import { interpolate, spring } from 'remotion';
+- `upstream/rules/timing.md` — `interpolate`, `spring`, Easing, frame math.
+- `upstream/rules/sequencing.md` — `<Sequence>` patterns, delay, trim.
+- `upstream/rules/transitions.md` — scene transitions.
+- `upstream/rules/audio.md` — advanced audio (trim, volume, speed, pitch).
+- `upstream/rules/audio-visualization.md` — spectrum / waveform reactive.
+- `upstream/rules/google-fonts.md`, `upstream/rules/local-fonts.md`.
+- `upstream/rules/transparent-videos.md` — alpha output.
+- `upstream/rules/parameters.md` — Zod-typed parametrised compositions.
+- `upstream/rules/3d.md` — Three.js + React Three Fiber in Remotion.
+- `upstream/rules/calculate-metadata.md` — dynamic duration/dimensions.
+- `upstream/rules/voiceover.md` — ElevenLabs TTS.
+- 26 more — see `upstream/SKILL.md` for the full catalogue.
 
-const opacity = interpolate(frame, [0, 30], [0, 1], { extrapolateRight: 'clamp' });
-const scale   = spring({ frame, fps, config: { damping: 12, stiffness: 120 } });
-```
+## Hard rules to remember (from upstream)
 
-**Sequencing scenes** with `<Sequence from={…} durationInFrames={…}>`:
+The upstream skill is explicit about a few non-negotiables:
 
-```tsx
-<Sequence from={fps * 5} durationInFrames={fps * 3}>
-  <Caption text="Built with skillpack" />
-</Sequence>
-```
+- **CSS transitions and CSS animations are FORBIDDEN** in Remotion
+  components — they don't render correctly. Drive every visual change
+  from `useCurrentFrame()` + `interpolate()` or `spring()`.
+- **Tailwind animation classes are FORBIDDEN** for the same reason.
+  Tailwind for static styling is fine (`upstream/rules/tailwind.md`).
+- Use `<Img>`, `<Video>`, `<Audio>` from `remotion` / `@remotion/media`,
+  not bare `<img>` / `<video>` / `<audio>` — the wrappers integrate with
+  Remotion's frame clock and asset preloader.
+- Reference public assets via `staticFile('foo.png')`, never with raw
+  paths like `'/foo.png'` — the latter breaks under `remotion render`.
 
-**Layered fullscreen layout** — always use `<AbsoluteFill>` for backgrounds
-and full-bleed layers, never raw `<div style={{ position:'absolute' … }}>`.
+## When in doubt
 
-## Common tasks
-
-**Add a new scene to the default reel** (`src/video/MyVideo.tsx`):
-1. Compute a `from` frame relative to `fps` (e.g. `fps * 12`).
-2. Wrap your scene in `<Sequence from={…} durationInFrames={…}>`.
-3. If the scene needs new fonts, images, or audio, drop them under
-   `public/` and reference with `staticFile('your-asset.png')` (import
-   `staticFile` from `remotion`).
-4. Adjust the parent `<Composition durationInFrames={…}>` in
-   `src/video/Root.tsx` so total length covers your new scene.
-
-**Add a second composition** (e.g. a 6-second social cut):
-1. Create `src/video/Short.tsx` exporting a new component.
-2. Add a sibling `<Composition id="Short" component={Short} … />` in
-   `Root.tsx`.
-3. Render with `npm run video:render -- src/video/Root.tsx Short out/short.mp4`
-   (the existing `video:render` script is hardcoded to `MyVideo` — for a
-   second comp either run `remotion render` directly or duplicate the
-   script).
-
-**Render headlessly** (CI / production):
-
-```bash
-npm run video:render
-# → out/video.mp4
-```
-
-**Embed in the app**: the default `<VideoPreview />` is already mounted in
-`<App />`. To render a different composition in-app, edit
-`src/components/VideoPreview.tsx` and swap the `component=` and
-`inputProps=` for the new composition.
-
-## Pitfalls
-
-- **Never call hooks (`useState`, `useEffect`) inside Remotion scene
-  components if the value must be deterministic per frame.** Renders must
-  be reproducible for headless rendering to work. Use `useCurrentFrame`
-  + pure math instead.
-- **Asset paths**: in dev the browser serves from `/`, but `remotion render`
-  uses Node's file resolution. Always go through `staticFile('foo.png')`
-  rather than hardcoded paths.
-- **Audio**: use `<Audio src={staticFile('music.mp3')} />`. For per-scene
-  audio inside a `<Sequence>`, the `from`/`durationInFrames` of the
-  parent sequence clips it automatically.
-- **Output codec**: `remotion render` defaults to H.264 MP4. For lossless
-  ProRes pass `--codec=prores-4444`. For GIFs pass
-  `--codec=gif --output=out.gif`.
-
-## When to dig deeper
-
-See `references/timing-and-easing.md` for a longer treatment of `spring`,
-`interpolate`, frame math, and how to compose nested `<Sequence>`s
-without drifting timestamps.
+Read `upstream/SKILL.md` end-to-end (it's short — ~250 lines), then follow
+its pointers into `upstream/rules/`. The Remotion team maintains those
+files; they will be more current than anything we could write.

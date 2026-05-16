@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
   "name": "remotion",
-  "version": "0.1.0",
-  "description": "Programmatic video composition with Remotion 4, mounted as a preview <Player /> in the React app and rendered headlessly via `npm run video:render`.",
+  "version": "0.2.0",
+  "description": "Programmatic video composition with Remotion 4, wired into this React project: a 1080x1080 default <Composition>, an in-app <Player /> preview, and `npm run video:render` for headless MP4. Wraps the canonical Remotion team's `remotion-best-practices` skill (vendored under upstream/) for deep API guidance.",
   "deps": {
     "remotion": "^4.0.220",
     "@remotion/cli": "^4.0.220",
-    "@remotion/player": "^4.0.220"
+    "@remotion/player": "^4.0.220",
+    "@remotion/media": "^4.0.220"
   },
   "devDeps": {},
   "files": [

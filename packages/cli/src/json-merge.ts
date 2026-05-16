@@ -27,11 +27,7 @@ function isPlainObject(v: unknown): v is { [k: string]: JsonValue } {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
 
-export function deepMerge(
-  base: JsonValue,
-  patch: JsonValue,
-  path = '',
-): JsonValue {
+export function deepMerge(base: JsonValue, patch: JsonValue, path = ''): JsonValue {
   if (patch === undefined) return base;
   if (base === undefined || base === null) return patch;
 

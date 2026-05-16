@@ -17,10 +17,7 @@ const MARKER_PREFIX = '@skillpack:';
 function markerRegex(name: string): RegExp {
   // Match the marker name surrounded by typical comment delimiters.
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(
-    `^([ \\t]*)(?://|/\\*|\\{/\\*|<!--)\\s*${MARKER_PREFIX}${escaped}\\b`,
-    'm',
-  );
+  return new RegExp(`^([ \\t]*)(?://|/\\*|\\{/\\*|<!--)\\s*${MARKER_PREFIX}${escaped}\\b`, 'm');
 }
 
 export class MarkerNotFoundError extends Error {

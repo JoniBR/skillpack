@@ -14,10 +14,7 @@
       "description": "Scaffold a working project + a curated set of agent skills in one command, so the agent can spend its tokens on application logic instead of setup. Ships with the `react` boilerplate and the `remotion` skill out of the box, plus authoring meta-skills (`skill-creator`, etc.).",
       "source": "./",
       "strict": false,
-      "skills": [
-        "./meta-skills/skill-creator",
-        "./vendor/anthropic-skill-creator"
-      ]
+      "skills": ["./meta-skills/skill-creator", "./vendor/anthropic-skill-creator"]
     }
   ]
 }

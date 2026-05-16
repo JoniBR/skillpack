@@ -10,9 +10,7 @@ const manifest: ProjectManifest = {
     version: '0.1.0',
     contentHash: 'sha256:aaaa',
   },
-  skills: [
-    { name: 'remotion', version: '0.1.0', contentHash: 'sha256:bbbb', source: 'bundled' },
-  ],
+  skills: [{ name: 'remotion', version: '0.1.0', contentHash: 'sha256:bbbb', source: 'bundled' }],
 };
 
 describe('renderAgentsMd / parseAgentsMd', () => {

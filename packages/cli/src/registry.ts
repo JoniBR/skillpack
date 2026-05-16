@@ -63,23 +63,16 @@ export function listBoilerplates(root = resolveBundledRoot()): string[] {
 export function listSkills(boilerplate: string, root = resolveBundledRoot()): string[] {
   const skillsDir = join(root, boilerplate, 'skills');
   if (!existsSync(skillsDir)) return [];
-  return readdirSync(skillsDir).filter((n) =>
-    existsSync(join(skillsDir, n, 'manifest.json')),
-  );
+  return readdirSync(skillsDir).filter((n) => existsSync(join(skillsDir, n, 'manifest.json')));
 }
 
-export function resolveBoilerplate(
-  name: string,
-  root = resolveBundledRoot(),
-): ResolvedBoilerplate {
+export function resolveBoilerplate(name: string, root = resolveBundledRoot()): ResolvedBoilerplate {
   const dir = join(root, name);
   const baseDir = join(dir, 'base');
   const manifestPath = join(dir, 'boilerplate.json');
   if (!existsSync(baseDir)) {
     const available = listBoilerplates(root).join(', ') || '(none)';
-    throw new Error(
-      `Unknown boilerplate "${name}". Available: ${available}`,
-    );
+    throw new Error(`Unknown boilerplate "${name}". Available: ${available}`);
   }
   const raw = existsSync(manifestPath)
     ? JSON.parse(readFileSync(manifestPath, 'utf8'))

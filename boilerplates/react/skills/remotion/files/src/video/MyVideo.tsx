@@ -30,9 +30,16 @@ export const MyVideo = ({ title = 'Hello from skillpack' }: MyVideoProps): JSX.E
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#0b0f17', color: '#fff', fontFamily: 'system-ui' }}>
-      <AbsoluteFill style={{ opacity: bgOpacity, background: 'radial-gradient(circle at 30% 20%, #2563eb33, transparent 60%)' }} />
+      <AbsoluteFill
+        style={{
+          opacity: bgOpacity,
+          background: 'radial-gradient(circle at 30% 20%, #2563eb33, transparent 60%)',
+        }}
+      />
 
-      <AbsoluteFill style={{ justifyContent: 'center', alignItems: 'center', opacity: titleOpacity }}>
+      <AbsoluteFill
+        style={{ justifyContent: 'center', alignItems: 'center', opacity: titleOpacity }}
+      >
         <h1 style={{ fontSize: 96, margin: 0 }}>{title}</h1>
       </AbsoluteFill>
 

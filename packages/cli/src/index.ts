@@ -8,11 +8,6 @@ export {
   listSkills,
   resolveBundledRoot,
 } from './registry.js';
-export {
-  renderAgentsMd,
-  parseAgentsMd,
-  MANIFEST_OPEN,
-  MANIFEST_CLOSE,
-} from './agents-md.js';
+export { renderAgentsMd, parseAgentsMd, MANIFEST_OPEN, MANIFEST_CLOSE } from './agents-md.js';
 export { detectPackageManager, installCommand, type PackageManager } from './pm.js';
 export * from './schema.js';

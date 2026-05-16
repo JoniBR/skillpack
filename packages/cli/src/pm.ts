@@ -52,9 +52,7 @@ export function detectFromPath(): PackageManager | undefined {
 }
 
 export function detectPackageManager(cwd: string): PackageManager {
-  return (
-    detectFromLockfile(cwd) ?? detectFromUserAgent() ?? detectFromPath() ?? 'npm'
-  );
+  return detectFromLockfile(cwd) ?? detectFromUserAgent() ?? detectFromPath() ?? 'npm';
 }
 
 export function installCommand(pm: PackageManager): string[] {

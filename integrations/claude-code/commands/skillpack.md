@@ -38,8 +38,8 @@ matches their `description` frontmatter.
 
 `/skillpack react remotion`
 → Vite + React + TS + Vitest, with Remotion 4 wired in, an in-app
-   `<VideoPreview />`, `npm run video:render` to render headlessly, and a
-   `react-remotion` SKILL.md explaining the conventions.
+`<VideoPreview />`, `npm run video:render` to render headlessly, and a
+`react-remotion` SKILL.md explaining the conventions.
 
 `/skillpack list boilerplates`
 → lists installed boilerplate names.

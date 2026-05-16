@@ -3,11 +3,22 @@
   "version": "0.1.0",
   "description": "pi extension package for skill-pack: contributes the /skillpack prompt template + meta-skills.",
   "license": "MIT",
-  "keywords": ["pi-package", "skillpack", "agent-skills", "scaffolding"],
-  "publishConfig": { "access": "public" },
+  "keywords": [
+    "pi-package",
+    "skillpack",
+    "agent-skills",
+    "scaffolding"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "pi": {
-    "prompts": ["./prompts"],
-    "skills": ["./skills"]
+    "prompts": [
+      "./prompts"
+    ],
+    "skills": [
+      "./skills"
+    ]
   },
   "files": [
     "prompts/**/*",

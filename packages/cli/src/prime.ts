@@ -74,9 +74,7 @@ function renderTree(dir: string, maxDepth: number): string {
     } catch {
       return;
     }
-    entries = entries
-      .filter((n) => n !== 'node_modules' && n !== '.git')
-      .sort();
+    entries = entries.filter((n) => n !== 'node_modules' && n !== '.git').sort();
     for (let i = 0; i < entries.length; i++) {
       const name = entries[i]!;
       const isLast = i === entries.length - 1;

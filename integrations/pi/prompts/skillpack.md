@@ -1,6 +1,6 @@
 ---
 description: Scaffold a project + agent skills via skill-pack. Usage `/skillpack <boilerplate> <skill1> <skill2> ...` (e.g. `/skillpack react remotion`).
-argument-hint: "<boilerplate> [skills...]"
+argument-hint: '<boilerplate> [skills...]'
 ---
 
 Run the skill-pack CLI in the current working directory with arguments `$@`:

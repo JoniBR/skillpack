@@ -4,5 +4,7 @@
   "description": "Meta-skill: author new skillpack skills with evaluation built in.",
   "license": "MIT",
   "private": true,
-  "files": ["SKILL.md"]
+  "files": [
+    "SKILL.md"
+  ]
 }

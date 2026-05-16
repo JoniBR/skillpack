@@ -13,7 +13,10 @@ import type { PackageManager } from '../pm.js';
 function readSkillpackVersion(): string {
   const here = dirname(fileURLToPath(import.meta.url));
   // dist/bin/ → dist/ → package root
-  for (const candidate of [join(here, '..', '..', 'package.json'), join(here, '..', 'package.json')]) {
+  for (const candidate of [
+    join(here, '..', '..', 'package.json'),
+    join(here, '..', 'package.json'),
+  ]) {
     if (existsSync(candidate)) {
       try {
         return JSON.parse(readFileSync(candidate, 'utf8')).version as string;
@@ -57,7 +60,9 @@ program
         force: opts['force'] === true,
       });
       console.log(
-        kleur.green(`\n✔ Scaffolded ${result.boilerplate.name} + [${result.skills.map((s) => s.name).join(', ')}] into ${result.projectDir}`),
+        kleur.green(
+          `\n✔ Scaffolded ${result.boilerplate.name} + [${result.skills.map((s) => s.name).join(', ')}] into ${result.projectDir}`,
+        ),
       );
       console.log(`  Package manager: ${kleur.cyan(result.pm)}`);
       console.log(`  Manifest schema: v${result.manifest.schemaVersion}`);
@@ -69,7 +74,7 @@ program
 
 program
   .command('prime')
-  .description("Emit a clean-context primer for a subagent.")
+  .description('Emit a clean-context primer for a subagent.')
   .requiredOption('--boilerplate <name>', 'boilerplate name')
   .requiredOption('--skills <list>', 'comma-separated skill names', (v: string) => v)
   .option('--project <path>', 'project directory (for the tree)', process.cwd())
@@ -133,21 +138,9 @@ skillCmd
     }
   });
 
-function scaffoldEmptySkill(
-  boilerplate: string,
-  name: string,
-  into: string | undefined,
-): void {
+function scaffoldEmptySkill(boilerplate: string, name: string, into: string | undefined): void {
   const { mkdirSync, writeFileSync, existsSync } = require('node:fs') as typeof import('node:fs');
-  const root =
-    into ??
-    join(
-      process.env['HOME'] ?? '~',
-      '.skillpack',
-      'skills',
-      boilerplate,
-      name,
-    );
+  const root = into ?? join(process.env['HOME'] ?? '~', '.skillpack', 'skills', boilerplate, name);
   if (existsSync(root)) {
     throw new Error(`Skill directory already exists: ${root}`);
   }
