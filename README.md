@@ -1,65 +1,134 @@
 # skillpack
 
-> Scaffold a working project + a curated set of agent skills in one command, so
-> the agent can spend its tokens on application logic instead of setup.
+> **Skills as code, not docs.** Scaffold a project + curated skills in one
+> command so the agent never has to rediscover the setup or the footguns.
+
+Most agent skills today are documentation: a `SKILL.md` that *tells* the
+agent which package to install, which version to pin, which footgun to
+avoid. skillpack ships the answer instead — a working scaffold with the
+right package versions, the right wiring, the known footguns *already
+fixed in code* — plus a small `SKILL.md` for the parts that genuinely
+need agent judgement.
 
 ```bash
 # Agent picks the boilerplate and skills it needs:
 /skillpack react remotion confetti
 ```
 
-`skillpack` drops a ready-to-run project into your cwd — dependencies installed,
-git initialised, and a small `AGENTS.md` primer plus per-skill `SKILL.md` files
-that load on demand. The agent reads what it needs, when it needs it. No more
-burning a fifth of the context window on "how do I wire up Remotion again?"
+You get a ready-to-run project: dependencies installed, `Root.tsx` wired
+the way the headless renderer actually expects, `AGENTS.md` primer that
+auto-loads, per-skill bodies that load on demand.
 
-**Status:** v0.1 in progress. See [`DESIGN.md`](./DESIGN.md) for the full
-design.
+**Status:** v0.x, real evals green. See [`DESIGN.md`](./DESIGN.md) for the
+full design.
 
 ---
 
-## Headline result — react + remotion bundle eval (iter-5, three-way)
+## Headline result — three-way Remotion eval
 
-Identical prompt: "build a 10-second Remotion video with a `Hello` title fade-in
-and three sequenced captions; verify with `pnpm install`, `pnpm typecheck`, AND a
-successful headless render to MP4."
+We pitted skillpack against two reasonable baselines on the same prompt:
+build a 10-second Remotion video, verify with `install` + `typecheck` + a
+successful headless render to MP4. **3 trials per cell**, fresh-context
+`claude -p` (no `--bare`), `claude-sonnet-4-6`.
 
-Three fresh `claude -p` agents in parallel, `claude-sonnet-4-6`:
+- **`no_skill`** — empty cwd, no skill, agent designs everything from scratch.
+- **`remotion_skill`** — the Remotion team's own production skill
+  (`SKILL.md` + 36-rule reference tree) installed at `.claude/skills/`.
+  The best docs-as-skill you can buy.
+- **`skillpack`** — `skillpack scaffold react remotion` runs first
+  (timed), then `pnpm install` (timed), then the agent. AGENTS.md and the
+  skillpack-wrapped Remotion skill auto-load.
 
-| Cell                                                    |   First-attempt render   |       Cost | Output tokens | MP4                                                                                                                      |
-| ------------------------------------------------------- | :----------------------: | ---------: | ------------: | ------------------------------------------------------------------------------------------------------------------------ |
-| `baseline` (empty cwd)                                  | ✗ (recovered on 2nd try) |     $0.209 |         6 420 | [baseline.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/baseline.mp4) (498 KB)           |
-| `upstream_only` (Remotion team's skill, no scaffold)    |            ✓             |     $0.300 |         5 529 | [upstream_only.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/upstream_only.mp4) (494 KB) |
-| **`skillpack` v0.2.1** (scaffold + footgun-fixed skill) |            ✓             | **$0.253** |     **4 907** | [skillpack.mp4](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter5/skillpack.mp4) (476 KB)         |
+| Cell             |   MP4 ✓  | 1st render | Turns | Tools | Output tokens | Cost              | Agent time | Total time |
+| ---------------- | :------: | :--------: | ----: | ----: | ------------: | ----------------: | ---------: | ---------: |
+| no_skill         |   100%   |    100%    |  13±2 |  12±2 |   2 794 ± 153 |  $0.210 ± 0.013   |     140 s  |     140 s  |
+| remotion_skill   |   100%   |    100%    |  18±3 |  16±3 |   3 411 ± 611 |  $0.262 ± 0.028   |     169 s  |     170 s  |
+| **skillpack**    | **100%** |  **100%**  | **13±2** | **11±2** | **2 452 ± 779** | **$0.192 ± 0.034** | **124 s**  |   144 s    |
 
-**Skillpack is the only cell that is Pareto-optimal** on this prompt: cheapest
-_and_ first-attempt render success _and_ lowest output token spend. Baseline is
-faster wall-clock but blew a Chrome download + bundle cycle on a failed first
-render (React 19 + Remotion-headless flake) before recovering. The Remotion
-team's own official skill (`upstream_only`) gets to first-attempt render via
-`npx create-video` but costs more in tokens and dollars than baseline on this
-scale of task.
+**Skillpack is Pareto-optimal on every per-agent metric**: cheapest
+(−9% vs no_skill, −27% vs remotion_skill), fewest output tokens, fewest
+tool calls, fastest agent time. Total wall-clock including the
+scaffold+install step (~17 s) is only 4 s slower than no_skill — those
+17 s of setup pay for themselves in saved agent work.
 
-Full writeup, methodology, caveats, and downloadable MP4s:
-[`evals/workspaces/iteration-5/REPORT.md`](./evals/workspaces/iteration-5/REPORT.md).
+Two surprises:
+
+1. **The maintainer's own skill is the most expensive cell on this task.**
+   `remotion_skill` succeeds first-try but spends 27% more dollars and
+   36% more output tokens than skillpack. On a small task, the
+   reading-overhead of a 36-file reference tree exceeds the work the
+   skill saves.
+2. **The tool-call mix tells the whole story.** `no_skill` does
+   `Bash=7, Write=5.3` (creating from scratch). `remotion_skill` does
+   `Bash=8.7, Write=3, Read=1.7, Edit=1.3, Skill=1` (still creating,
+   plus the skill overhead). `skillpack` does
+   `Read=4.7, Bash=3, Edit=1.3, Skill=1, Write=1` — **0 setup
+   commands.** Just reads, edits, and uses the skill.
+
+Canonical MP4s (trial-1):
+[`no_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/no_skill.mp4) ·
+[`remotion_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/remotion_skill.mp4) ·
+[`skillpack.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/skillpack.mp4).
+Full writeup, methodology, per-trial data, caveats:
+[`evals/workspaces/iteration-7/REPORT.md`](./evals/workspaces/iteration-7/REPORT.md).
+
+---
+
+## Footgun fixes, shipped as code
+
+A Remotion 4 project that's wired *almost* right will typecheck happily,
+run in the dev server happily, and then fail at headless render with
+`Visited "http://localhost:3000/index.html" but got no response` (React 19
+flake) or `this file does not contain registerRoot` (missing entry call) or
+`MyVideo.js doesn't exist` (TS `.js` extension imports that webpack
+doesn't honour).
+
+The official Remotion skill dodges these by *telling* the agent to run
+`npx create-video`, which happens to pin React 18 and call `registerRoot`
+for you — sidestepping the issues without ever naming them. The fix is
+implicit; the next time `create-video`'s defaults change, the skill
+breaks silently.
+
+skillpack dodges them *explicitly*: the `react/remotion` scaffold's
+[`Root.tsx`](./boilerplates/react/skills/remotion/files/src/video/Root.tsx)
+calls `registerRoot` directly and uses bare imports
+([commit 8a2154c](https://github.com/JoniBR/skillpack/commit/8a2154c)).
+React version, renderer entrypoint, and module resolution are
+**version-controlled in the boilerplate**, not in a sentence the agent
+might or might not read.
+
+The footgun lives in one place — the scaffold — and is fixed in code.
+Not in a `SKILL.md` sentence the agent has to parse correctly on every
+generation. Not in implicit transitive behaviour of a third-party CLI.
+In code.
+
+When upstream ships a fix to one of these, your scaffold inherits it;
+every future generation gets it for free.
 
 ---
 
 ## The pitch
 
-The spec asks: _"eval tokens used and time with and without"_ setup boilerplate.
-That's the whole product thesis. `skillpack` exists to move the **median agent
-session** towards "the agent built the thing" and away from "the agent set up
-the project, ran out of context, and asked the user to continue tomorrow."
+`skillpack` exists to move the median agent session towards "the agent
+built the thing" and away from "the agent set up the project, ran out of
+context, and asked the user to continue tomorrow."
 
 How:
 
-- **Bundled boilerplates** (`react`, later `nextjs`, `vite-vanilla-ts`) — one
-  CLI command, deterministic output, offline-capable.
-- **Boilerplate-scoped skills** (`react/remotion`, `react/confetti`, …) — each
-  skill knows the conventions of its host boilerplate. No leaky abstractions.
-- **Progressive-disclosure `SKILL.md`s** — one tight `AGENTS.md` always loads;
-  per-skill bodies load on demand; deep references load only if invoked.
+- **Bundled boilerplates** (`react`, later `nextjs`, `vite-vanilla-ts`) —
+  one CLI command, deterministic output, offline-capable.
+- **Boilerplate-scoped skills** (`react/remotion`, `react/confetti`, …) —
+  each skill knows the conventions of its host boilerplate. No leaky
+  abstractions.
+- **Footgun fixes shipped as code, not text.** When a skill's domain
+  has a known sharp edge (React 19 + Remotion-headless, ESM/CJS
+  mismatches, pinned peer-deps), the fix lives in the scaffold the
+  agent inherits — not in a `SKILL.md` sentence the agent has to read
+  correctly every time. When upstream ships a fix, your scaffold gets
+  it, every future generation inherits it.
+- **Progressive-disclosure `SKILL.md`s** — one tight `AGENTS.md` always
+  loads; per-skill bodies load on demand; deep references load only if
+  invoked.
 - **Built-in eval loop** — vendors Anthropic's `skill-creator` evaluation
   machinery to measure with-skill vs. baseline tokens and duration, both
   per-skill and at the bundle level.
@@ -137,6 +206,9 @@ All lifecycle commands require a clean git tree (`--force` overrides). The
 initial scaffold's `git init` provides this for free.
 
 ## How a generated project looks
+
+Everything below is what `skillpack scaffold react remotion` writes — no
+further config required, no further generations to read this.
 
 ```
 my-app/

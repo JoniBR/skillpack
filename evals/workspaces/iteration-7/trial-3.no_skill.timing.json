@@ -1,0 +1,10 @@
+{
+  "trial": 3,
+  "cell": "no_skill",
+  "scaffold_ms": 0,
+  "install_ms": 0,
+  "agent_ms": 143152,
+  "total_ms": 143573,
+  "mp4_path": "out/video.mp4",
+  "mp4_bytes": 484611
+}

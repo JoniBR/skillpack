@@ -21,3 +21,6 @@ evals/workspaces/*/upstream_only/
 evals/workspaces/*/skillpack/
 evals/workspaces/*/*.stderr
 evals/workspaces/*/*.wall_ms
+evals/workspaces/*/no_skill/
+evals/workspaces/*/remotion_skill/
+evals/workspaces/*/trial-*/

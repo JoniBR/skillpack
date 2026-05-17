@@ -1,0 +1,10 @@
+{
+  "trial": 2,
+  "cell": "remotion_skill",
+  "scaffold_ms": 0,
+  "install_ms": 0,
+  "agent_ms": 171407,
+  "total_ms": 171875,
+  "mp4_path": "my-video/out/video.mp4",
+  "mp4_bytes": 476635
+}

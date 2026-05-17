@@ -1,0 +1,522 @@
+{
+  "no_skill": {
+    "n": 3,
+    "first_render_success_rate": 1.0,
+    "mp4_success_rate": 1.0,
+    "render_attempts": {
+      "mean": 1.0,
+      "stddev": 0.0,
+      "min": 1,
+      "max": 1,
+      "n": 3
+    },
+    "agent_ms": {
+      "mean": 139654.66666666666,
+      "stddev": 3062.913863191933,
+      "min": 137450,
+      "max": 143152,
+      "n": 3
+    },
+    "total_ms": {
+      "mean": 140097.66666666666,
+      "stddev": 3045.436148293596,
+      "min": 137895,
+      "max": 143573,
+      "n": 3
+    },
+    "scaffold_ms": {
+      "mean": 0.0,
+      "stddev": 0.0,
+      "min": 0,
+      "max": 0,
+      "n": 3
+    },
+    "install_ms": {
+      "mean": 0.0,
+      "stddev": 0.0,
+      "min": 0,
+      "max": 0,
+      "n": 3
+    },
+    "turns": {
+      "mean": 13.333333333333334,
+      "stddev": 1.5275252316519468,
+      "min": 12,
+      "max": 15,
+      "n": 3
+    },
+    "cost_usd": {
+      "mean": 0.2095814,
+      "stddev": 0.013375650410727696,
+      "min": 0.19702050000000002,
+      "max": 0.2236449,
+      "n": 3
+    },
+    "input_tokens": {
+      "mean": 14.333333333333334,
+      "stddev": 1.5275252316519468,
+      "min": 13,
+      "max": 16,
+      "n": 3
+    },
+    "output_tokens": {
+      "mean": 2794.3333333333335,
+      "stddev": 153.18072115424098,
+      "min": 2622,
+      "max": 2915,
+      "n": 3
+    },
+    "cache_read_tokens": {
+      "mean": 240736.33333333334,
+      "stddev": 31934.092320486165,
+      "min": 212605,
+      "max": 275448,
+      "n": 3
+    },
+    "cache_create_tokens": {
+      "mean": 25440.666666666668,
+      "stddev": 454.4021713563144,
+      "min": 25032,
+      "max": 25930,
+      "n": 3
+    },
+    "tool_calls_total": {
+      "mean": 12.333333333333334,
+      "stddev": 1.5275252316519468,
+      "min": 11,
+      "max": 14,
+      "n": 3
+    },
+    "mp4_bytes": {
+      "mean": 507488.0,
+      "stddev": 20665.78353220608,
+      "min": 484611,
+      "max": 524805,
+      "n": 3
+    },
+    "per_trial": [
+      {
+        "trial": 1,
+        "cell": "no_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 137450,
+        "total_ms": 137895,
+        "mp4_bytes": 513048,
+        "mp4_path": "out/video.mp4",
+        "turns": 13,
+        "cost_usd": 0.20807879999999995,
+        "input_tokens": 14,
+        "output_tokens": 2846,
+        "cache_read_tokens": 234156,
+        "cache_create_tokens": 25360,
+        "tool_calls_total": 12,
+        "tool_calls_by_type": {
+          "Bash": 6,
+          "Write": 6
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 2,
+        "cell": "no_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 138362,
+        "total_ms": 138825,
+        "mp4_bytes": 524805,
+        "mp4_path": "out/video.mp4",
+        "turns": 12,
+        "cost_usd": 0.19702050000000002,
+        "input_tokens": 13,
+        "output_tokens": 2622,
+        "cache_read_tokens": 212605,
+        "cache_create_tokens": 25032,
+        "tool_calls_total": 11,
+        "tool_calls_by_type": {
+          "Bash": 6,
+          "Write": 5
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 3,
+        "cell": "no_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 143152,
+        "total_ms": 143573,
+        "mp4_bytes": 484611,
+        "mp4_path": "out/video.mp4",
+        "turns": 15,
+        "cost_usd": 0.2236449,
+        "input_tokens": 16,
+        "output_tokens": 2915,
+        "cache_read_tokens": 275448,
+        "cache_create_tokens": 25930,
+        "tool_calls_total": 14,
+        "tool_calls_by_type": {
+          "Bash": 9,
+          "Write": 5
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      }
+    ]
+  },
+  "remotion_skill": {
+    "n": 3,
+    "first_render_success_rate": 1.0,
+    "mp4_success_rate": 1.0,
+    "render_attempts": {
+      "mean": 1.0,
+      "stddev": 0.0,
+      "min": 1,
+      "max": 1,
+      "n": 3
+    },
+    "agent_ms": {
+      "mean": 169205.0,
+      "stddev": 5802.327377871745,
+      "min": 162624,
+      "max": 173584,
+      "n": 3
+    },
+    "total_ms": {
+      "mean": 169692.33333333334,
+      "stddev": 5863.06450018532,
+      "min": 163051,
+      "max": 174151,
+      "n": 3
+    },
+    "scaffold_ms": {
+      "mean": 0.0,
+      "stddev": 0.0,
+      "min": 0,
+      "max": 0,
+      "n": 3
+    },
+    "install_ms": {
+      "mean": 0.0,
+      "stddev": 0.0,
+      "min": 0,
+      "max": 0,
+      "n": 3
+    },
+    "turns": {
+      "mean": 17.666666666666668,
+      "stddev": 2.8867513459481287,
+      "min": 16,
+      "max": 21,
+      "n": 3
+    },
+    "cost_usd": {
+      "mean": 0.2619813,
+      "stddev": 0.02846477950120992,
+      "min": 0.24487485,
+      "max": 0.2948403,
+      "n": 3
+    },
+    "input_tokens": {
+      "mean": 78.33333333333333,
+      "stddev": 103.64522822268921,
+      "min": 17,
+      "max": 198,
+      "n": 3
+    },
+    "output_tokens": {
+      "mean": 3411.3333333333335,
+      "stddev": 611.3733174855878,
+      "min": 2920,
+      "max": 4096,
+      "n": 3
+    },
+    "cache_read_tokens": {
+      "mean": 331979.3333333333,
+      "stddev": 54580.52248131501,
+      "min": 289807,
+      "max": 393626,
+      "n": 3
+    },
+    "cache_create_tokens": {
+      "mean": 29595.333333333332,
+      "stddev": 987.8776914847978,
+      "min": 28967,
+      "max": 30734,
+      "n": 3
+    },
+    "tool_calls_total": {
+      "mean": 15.666666666666666,
+      "stddev": 2.8867513459481287,
+      "min": 14,
+      "max": 19,
+      "n": 3
+    },
+    "mp4_bytes": {
+      "mean": 480749.0,
+      "stddev": 3635.248409668863,
+      "min": 476635,
+      "max": 483528,
+      "n": 3
+    },
+    "per_trial": [
+      {
+        "trial": 1,
+        "cell": "remotion_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 162624,
+        "total_ms": 163051,
+        "mp4_bytes": 483528,
+        "mp4_path": "my-video/out/video.mp4",
+        "turns": 16,
+        "cost_usd": 0.24487485,
+        "input_tokens": 198,
+        "output_tokens": 3218,
+        "cache_read_tokens": 289807,
+        "cache_create_tokens": 29085,
+        "tool_calls_total": 14,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Bash": 8,
+          "Write": 2,
+          "Read": 2,
+          "Edit": 1
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 2,
+        "cell": "remotion_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 171407,
+        "total_ms": 171875,
+        "mp4_bytes": 476635,
+        "mp4_path": "my-video/out/video.mp4",
+        "turns": 16,
+        "cost_usd": 0.24622874999999997,
+        "input_tokens": 17,
+        "output_tokens": 2920,
+        "cache_read_tokens": 312505,
+        "cache_create_tokens": 28967,
+        "tool_calls_total": 14,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Bash": 9,
+          "Read": 2,
+          "Write": 1,
+          "Edit": 1
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 3,
+        "cell": "remotion_skill",
+        "scaffold_ms": 0,
+        "install_ms": 0,
+        "agent_ms": 173584,
+        "total_ms": 174151,
+        "mp4_bytes": 482084,
+        "mp4_path": "out/video.mp4",
+        "turns": 21,
+        "cost_usd": 0.2948403,
+        "input_tokens": 20,
+        "output_tokens": 4096,
+        "cache_read_tokens": 393626,
+        "cache_create_tokens": 30734,
+        "tool_calls_total": 19,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Bash": 9,
+          "Write": 6,
+          "Read": 1,
+          "Edit": 2
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      }
+    ]
+  },
+  "skillpack": {
+    "n": 3,
+    "first_render_success_rate": 1.0,
+    "mp4_success_rate": 1.0,
+    "render_attempts": {
+      "mean": 1.0,
+      "stddev": 0.0,
+      "min": 1,
+      "max": 1,
+      "n": 3
+    },
+    "agent_ms": {
+      "mean": 124388.66666666667,
+      "stddev": 23139.18808716791,
+      "min": 102620,
+      "max": 148690,
+      "n": 3
+    },
+    "total_ms": {
+      "mean": 143836.66666666666,
+      "stddev": 23029.30763903538,
+      "min": 122158,
+      "max": 168013,
+      "n": 3
+    },
+    "scaffold_ms": {
+      "mean": 4912.0,
+      "stddev": 15.874507866387544,
+      "min": 4894,
+      "max": 4924,
+      "n": 3
+    },
+    "install_ms": {
+      "mean": 12298.666666666666,
+      "stddev": 51.42308171758411,
+      "min": 12267,
+      "max": 12358,
+      "n": 3
+    },
+    "turns": {
+      "mean": 13.333333333333334,
+      "stddev": 1.5275252316519468,
+      "min": 12,
+      "max": 15,
+      "n": 3
+    },
+    "cost_usd": {
+      "mean": 0.19164974999999998,
+      "stddev": 0.03398808888901374,
+      "min": 0.1608855,
+      "max": 0.22813544999999996,
+      "n": 3
+    },
+    "input_tokens": {
+      "mean": 2636.6666666666665,
+      "stddev": 2117.9058839649447,
+      "min": 1386,
+      "max": 5082,
+      "n": 3
+    },
+    "output_tokens": {
+      "mean": 2451.6666666666665,
+      "stddev": 779.1613012292983,
+      "min": 1900,
+      "max": 3343,
+      "n": 3
+    },
+    "cache_read_tokens": {
+      "mean": 204370.0,
+      "stddev": 24780.60473434819,
+      "min": 179975,
+      "max": 229519,
+      "n": 3
+    },
+    "cache_create_tokens": {
+      "mean": 22841.0,
+      "stddev": 2721.694508941075,
+      "min": 19796,
+      "max": 25037,
+      "n": 3
+    },
+    "tool_calls_total": {
+      "mean": 11.333333333333334,
+      "stddev": 1.5275252316519468,
+      "min": 10,
+      "max": 13,
+      "n": 3
+    },
+    "mp4_bytes": {
+      "mean": 518099.6666666667,
+      "stddev": 31185.496778684374,
+      "min": 482619,
+      "max": 541167,
+      "n": 3
+    },
+    "per_trial": [
+      {
+        "trial": 1,
+        "cell": "skillpack",
+        "scaffold_ms": 4894,
+        "install_ms": 12271,
+        "agent_ms": 121856,
+        "total_ms": 141339,
+        "mp4_bytes": 541167,
+        "mp4_path": "out/video.mp4",
+        "turns": 13,
+        "cost_usd": 0.1859283,
+        "input_tokens": 1442,
+        "output_tokens": 2112,
+        "cache_read_tokens": 203616,
+        "cache_create_tokens": 23690,
+        "tool_calls_total": 11,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Read": 5,
+          "Edit": 1,
+          "Write": 1,
+          "Bash": 3
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 2,
+        "cell": "skillpack",
+        "scaffold_ms": 4918,
+        "install_ms": 12267,
+        "agent_ms": 148690,
+        "total_ms": 168013,
+        "mp4_bytes": 482619,
+        "mp4_path": "out/video.mp4",
+        "turns": 15,
+        "cost_usd": 0.22813544999999996,
+        "input_tokens": 5082,
+        "output_tokens": 3343,
+        "cache_read_tokens": 229519,
+        "cache_create_tokens": 25037,
+        "tool_calls_total": 13,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Glob": 1,
+          "Read": 5,
+          "Edit": 2,
+          "Write": 1,
+          "Bash": 3
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      },
+      {
+        "trial": 3,
+        "cell": "skillpack",
+        "scaffold_ms": 4924,
+        "install_ms": 12358,
+        "agent_ms": 102620,
+        "total_ms": 122158,
+        "mp4_bytes": 530513,
+        "mp4_path": "out/video.mp4",
+        "turns": 12,
+        "cost_usd": 0.1608855,
+        "input_tokens": 1386,
+        "output_tokens": 1900,
+        "cache_read_tokens": 179975,
+        "cache_create_tokens": 19796,
+        "tool_calls_total": 10,
+        "tool_calls_by_type": {
+          "Skill": 1,
+          "Read": 4,
+          "Edit": 1,
+          "Write": 1,
+          "Bash": 3
+        },
+        "render_attempts": 1,
+        "first_render_success": true
+      }
+    ]
+  }
+}

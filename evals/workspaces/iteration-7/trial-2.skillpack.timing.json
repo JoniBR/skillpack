@@ -1,0 +1,10 @@
+{
+  "trial": 2,
+  "cell": "skillpack",
+  "scaffold_ms": 4918,
+  "install_ms": 12267,
+  "agent_ms": 148690,
+  "total_ms": 168013,
+  "mp4_path": "out/video.mp4",
+  "mp4_bytes": 482619
+}

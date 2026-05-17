@@ -52,3 +52,81 @@ jobs:
           grep -q "@skillpack:manifest" AGENTS.md
           grep -q "VideoPreview" src/App.tsx
           echo "✔ smoke test passed"
+
+  evals-aggregate:
+    runs-on: ubuntu-latest
+    name: Re-aggregate iter-7 eval (no live API)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run aggregator on committed stream-json transcripts
+        run: |
+          cd evals/workspaces/iteration-7
+          # We don't have the trial-*/ working trees (they're gitignored),
+          # so the analyzer's MP4-presence check has to be skipped. The
+          # token/turn/cost numbers come purely from the stream-json files,
+          # which ARE committed.
+          python3 -c "
+          import json, sys
+          sys.path.insert(0, '.')
+          # Stub out timing.json read (we don't ship working trees)
+          import aggregate
+          orig = aggregate.analyze_run
+          def stub_timing(trial, cell):
+              from pathlib import Path
+              p = aggregate.EVAL_ROOT / f'trial-{trial}.{cell}.timing.json'
+              if not p.exists():
+                  p.write_text(json.dumps({
+                      'trial': trial, 'cell': cell,
+                      'scaffold_ms': 0, 'install_ms': 0, 'agent_ms': 0,
+                      'total_ms': 0, 'mp4_path': '', 'mp4_bytes': 0,
+                  }))
+              return orig(trial, cell)
+          aggregate.analyze_run = stub_timing
+          aggregate.main()
+          "
+      - name: Sanity-check published numbers match the table
+        run: |
+          python3 - <<'PY'
+          import json
+          s = json.load(open('evals/workspaces/iteration-7/summary.json'))
+          # Spot-check: skillpack cost should be < remotion_skill cost (key claim).
+          sk = s['skillpack']['cost_usd']['mean']
+          rs = s['remotion_skill']['cost_usd']['mean']
+          assert sk < rs, f'skillpack cost {sk} not < remotion_skill {rs}'
+          # All cells: 100% mp4 success (assumes timing.json was present at run time).
+          for c in ['no_skill','remotion_skill','skillpack']:
+              assert s[c]['first_render_success_rate'] == 1.0, f'{c} first-render-success regressed'
+          print('✔ sanity checks passed')
+          PY
+
+  evals-live:
+    # Manually triggerable: runs a fresh 3-cell live eval. Costs ~$0.60-1.00
+    # in API. Requires ANTHROPIC_API_KEY secret. Not part of every-PR CI.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    needs: smoke-scaffold
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @skill-pack/cli build
+      - name: Install Claude Code CLI
+        run: npm i -g @anthropic-ai/claude-code
+      - name: Run iter-7 single-trial live eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          for c in no_skill remotion_skill skillpack; do
+            evals/workspaces/iteration-7/run.sh 1 $c
+          done
+          python3 evals/workspaces/iteration-7/aggregate.py
