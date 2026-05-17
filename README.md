@@ -29,15 +29,15 @@ full design.
 skillpack is built for the case where you point an agent at **one focused
 task** and want it to ship:
 
-- *"Generate a 15-second product reel for our launch tomorrow."*
-- *"Build me a 12-slide investor deck from this outline."*
-- *"Run the cohort retention analysis on this CSV and produce a chart."*
-- *"Scaffold a dashboard that polls this endpoint and graphs the latency."*
+- _"Generate a 15-second product reel for our launch tomorrow."_
+- _"Build me a 12-slide investor deck from this outline."_
+- _"Run the cohort retention analysis on this CSV and produce a chart."_
+- _"Scaffold a dashboard that polls this endpoint and graphs the latency."_
 
 For tasks like these, the bottleneck is rarely the task itself — it's
 the **task scaffold**. The agent needs to pick a framework, pin
 compatible versions, dodge the well-known footguns, wire the entrypoints
-the headless tooling expects, and *then* start on the actual work. By
+the headless tooling expects, and _then_ start on the actual work. By
 the time it has, half its turns and a third of its tokens are gone on
 plumbing the user didn't ask about.
 
@@ -103,12 +103,10 @@ Two surprises:
    `Read=4.7, Bash=3, Edit=1.3, Skill=1, Write=1` — **0 setup
    commands.** Just reads, edits, and uses the skill.
 
-Canonical MP4s (trial-1):
+Canonical MP4s (trial-1 of each cell):
 [`no_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/no_skill.mp4) ·
 [`remotion_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/remotion_skill.mp4) ·
 [`skillpack.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/skillpack.mp4).
-Full writeup, methodology, per-trial data, caveats:
-[`evals/workspaces/iteration-7/REPORT.md`](./evals/workspaces/iteration-7/REPORT.md).
 
 ---
 

@@ -1,26 +1,27 @@
+# Secrets — never commit
 .env
-node_modules/
-dist/
-.DS_Store
-*.log
-.skillpack/cache/
-*.tsbuildinfo
-coverage/
-.turbo/
+.env.*
+!.env.example
+
+# Personal scratch doc (not for upstream)
 OPEN-QUESTIONS.md
 
-# pi-lens cache
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Node / build artefacts
+node_modules/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+*.log
+
+# Skillpack-internal scratch
+.skillpack/cache/
+
+# pi-lens local cache
 .pi-lens/
-evals/workspaces/*/node_modules/
-evals/workspaces/*/.git/
-evals/workspaces/*/baseline/
-evals/workspaces/*/with_skillpack/
-evals/workspaces/*/with_skill/
-evals/workspaces/*/without_skill/
-evals/workspaces/*/upstream_only/
-evals/workspaces/*/skillpack/
-evals/workspaces/*/*.stderr
-evals/workspaces/*/*.wall_ms
-evals/workspaces/*/no_skill/
-evals/workspaces/*/remotion_skill/
-evals/workspaces/*/trial-*/
