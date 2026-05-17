@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /** Entry point for the `skillpack` CLI. */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import kleur from 'kleur';
 import { prime } from '../prime.js';
-import { listBoilerplates, listSkills } from '../registry.js';
+import { listBoilerplatesWithSource, listSkillsWithSource } from '../registry.js';
 import { scaffold, type Host } from '../scaffold.js';
 import type { PackageManager } from '../pm.js';
 
@@ -102,7 +102,10 @@ listCmd
   .description('List bundled boilerplates.')
   .action(() => {
     try {
-      for (const name of listBoilerplates()) console.log(name);
+      for (const entry of listBoilerplatesWithSource()) {
+        const suffix = entry.source === 'overlay' ? '  (overlay)' : '';
+        console.log(entry.name + suffix);
+      }
     } catch (err) {
       handle(err);
     }
@@ -113,7 +116,10 @@ listCmd
   .description('List skills available for a boilerplate.')
   .action((boilerplate: string) => {
     try {
-      for (const name of listSkills(boilerplate)) console.log(name);
+      for (const entry of listSkillsWithSource(boilerplate)) {
+        const suffix = entry.source === 'overlay' ? '  (overlay)' : '';
+        console.log(entry.name + suffix);
+      }
     } catch (err) {
       handle(err);
     }
@@ -125,7 +131,7 @@ skillCmd
   .description('Create an empty skill skeleton for skill-creator to fill in.')
   .requiredOption('--boilerplate <name>', 'target boilerplate')
   .requiredOption('--name <skill>', 'new skill name (kebab-case)')
-  .option('--into <path>', 'override target directory (default: bundled location)')
+  .option('--into <path>', 'override target directory (default: overlay location)')
   .action((opts: Record<string, unknown>) => {
     try {
       scaffoldEmptySkill(
@@ -138,9 +144,34 @@ skillCmd
     }
   });
 
+const boilerplateCmd = program
+  .command('boilerplate')
+  .description('Boilerplate-authoring helpers.');
+boilerplateCmd
+  .command('scaffold')
+  .description('Create an empty boilerplate skeleton under ~/.skill-pack/boilerplates/.')
+  .requiredOption('--name <name>', 'new boilerplate name (kebab-case)')
+  .option('--into <path>', 'override target directory (default: overlay location)')
+  .action((opts: Record<string, unknown>) => {
+    try {
+      scaffoldEmptyBoilerplate(opts['name'] as string, opts['into'] as string | undefined);
+    } catch (err) {
+      handle(err);
+    }
+  });
+
 function scaffoldEmptySkill(boilerplate: string, name: string, into: string | undefined): void {
-  const { mkdirSync, writeFileSync, existsSync } = require('node:fs') as typeof import('node:fs');
-  const root = into ?? join(process.env['HOME'] ?? '~', '.skillpack', 'skills', boilerplate, name);
+  // Verify parent boilerplate exists (bundled OR overlay) before creating.
+  const available = listBoilerplatesWithSource().map((e) => e.name);
+  if (!available.includes(boilerplate)) {
+    const list = available.length ? available.join(', ') : '(none)';
+    throw new Error(
+      `Boilerplate '${boilerplate}' not found. Available: ${list}. ` +
+        `To create a new boilerplate, run: skillpack boilerplate scaffold --name ${boilerplate}`,
+    );
+  }
+  const home = process.env['HOME'] ?? process.env['USERPROFILE'] ?? '~';
+  const root = into ?? join(home, '.skill-pack', 'skills', boilerplate, name);
   if (existsSync(root)) {
     throw new Error(`Skill directory already exists: ${root}`);
   }
@@ -179,6 +210,41 @@ TODO: project conventions, snippet cheatsheet, pointers to references/.
   );
   console.log(kleur.green(`✔ Skill skeleton created at ${root}`));
   console.log(kleur.dim(`  Now invoke skill-creator to fill in manifest + SKILL.md.`));
+}
+
+function scaffoldEmptyBoilerplate(name: string, into: string | undefined): void {
+  const home = process.env['HOME'] ?? process.env['USERPROFILE'] ?? '~';
+  const root = into ?? join(home, '.skill-pack', 'boilerplates', name);
+  if (existsSync(root)) {
+    throw new Error(`Boilerplate directory already exists: ${root}`);
+  }
+  mkdirSync(join(root, 'base'), { recursive: true });
+  mkdirSync(join(root, 'base-skill'), { recursive: true });
+  writeFileSync(
+    join(root, 'boilerplate.json'),
+    JSON.stringify(
+      {
+        schemaVersion: 1,
+        name,
+        version: '0.1.0',
+        description: `TODO: describe the ${name} boilerplate.`,
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+  writeFileSync(join(root, 'base', '.gitkeep'), '');
+  writeFileSync(
+    join(root, 'base-skill', 'SKILL.md'),
+    `---\nname: ${name}\ndescription: TODO. Base conventions for the ${name} boilerplate.\n---\n\n# ${name}\n\nTODO: project conventions, layout, scripts, snippet cheatsheet.\n`,
+  );
+  console.log(kleur.green(`✔ Boilerplate skeleton created at ${root}`));
+  console.log(
+    kleur.dim(
+      `  Fill base/ with your starter files, then add skills via:\n` +
+        `    skillpack skill scaffold --boilerplate ${name} --name <skill>`,
+    ),
+  );
 }
 
 function handle(err: unknown): never {

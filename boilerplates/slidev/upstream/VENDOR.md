@@ -30,22 +30,21 @@
 
 ## What skillpack does with this content
 
-At scaffold time, the existing `scaffold.ts` pipeline copies a skill's aux
-directories (anything in the skill dir that isn't `files/`, `manifest.json`,
-or the SKILL.md itself) into the consuming project at:
+At scaffold time, the scaffolder's boilerplate-aux pass copies everything
+at the boilerplate root that isn't `base/`, `base-skill/`, `skills/`, or
+`boilerplate.json` into the consuming project at:
 
-- `.claude/skills/slidev-slidev-best-practices/upstream/` (Claude Code)
-- `.pi/skills/slidev-slidev-best-practices/upstream/` (pi)
+- `.claude/skills/slidev/upstream/` (Claude Code)
+- `.pi/skills/slidev/upstream/` (pi)
 
-The skillpack-authored `SKILL.md` (one level up) wraps this with a
-project-specific preamble (file layout, scripts already wired, Slidev
-gotchas), then points the agent at the upstream content for everything else.
+The `base-skill/SKILL.md` (the boilerplate's always-on primer) points at
+this vendored content for everything Slidev-specific.
 
 ## Upgrade
 
 ```sh
 git clone https://github.com/slidevjs/slidev /tmp/slidev-upstream
-DEST=boilerplates/slidev/skills/slidev-best-practices/upstream
+DEST=boilerplates/slidev/upstream
 rm -rf "$DEST/references" "$DEST/SKILL.md" "$DEST/README.md"
 cp /tmp/slidev-upstream/skills/slidev/SKILL.md      "$DEST/SKILL.md"
 cp -R /tmp/slidev-upstream/skills/slidev/references "$DEST/references"

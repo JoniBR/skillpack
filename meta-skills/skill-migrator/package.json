@@ -1,0 +1,10 @@
+{
+  "name": "@skill-pack/meta-skill-migrator",
+  "version": "0.1.0",
+  "description": "Meta-skill: convert an existing (general / Claude-style) SKILL.md into a skillpack skill under a host boilerplate.",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "SKILL.md"
+  ]
+}

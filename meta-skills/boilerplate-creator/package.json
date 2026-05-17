@@ -1,0 +1,10 @@
+{
+  "name": "@skill-pack/meta-boilerplate-creator",
+  "version": "0.1.0",
+  "description": "Meta-skill: author a new skillpack boilerplate (base/ + base-skill/ + markers) from scratch.",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "SKILL.md"
+  ]
+}

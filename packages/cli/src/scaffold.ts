@@ -218,7 +218,7 @@ export function scaffold(opts: ScaffoldOptions): ScaffoldResult {
     name: s.name,
     version: s.manifest.version,
     contentHash: hashDirectory(s.dir),
-    source: 'bundled',
+    source: s.source,
   }));
   const manifest: ProjectManifest = {
     schemaVersion: 1,
