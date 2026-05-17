@@ -25,3 +25,10 @@ coverage/
 
 # pi-lens local cache
 .pi-lens/
+
+# Staged-for-publish bundles inside packages/cli/ (source of truth at repo root)
+packages/cli/boilerplates/
+packages/cli/meta-skills/
+packages/cli/vendor/
+# Synced-for-publish skills inside the pi extension package
+integrations/pi/skills/
