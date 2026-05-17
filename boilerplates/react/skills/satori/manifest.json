@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "name": "satori",
+  "version": "0.1.0",
+  "description": "Open Graph / social-card image generation with Vercel's satori, wired into this React + Vite project: a JSX template under `src/og/`, a node-side generator script, and `npm run og:generate` that writes PNGs into `public/og/`. Wraps the community satori-skilld skill (vendored under upstream/) for deep satori API guidance.",
+  "deps": {
+    "satori": "^0.10"
+  },
+  "devDeps": {
+    "@resvg/resvg-js": "^2.6",
+    "tsx": "^4"
+  },
+  "files": [
+    { "from": "files/scripts/og.ts", "to": "scripts/og.ts" },
+    { "from": "files/src/og/SocialCard.tsx", "to": "src/og/SocialCard.tsx" }
+  ],
+  "jsonPatches": [
+    {
+      "file": "package.json",
+      "merge": {
+        "scripts": {
+          "og:generate": "tsx scripts/og.ts"
+        }
+      }
+    }
+  ],
+  "skillMd": "SKILL.md"
+}

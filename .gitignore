@@ -33,3 +33,4 @@ packages/cli/meta-skills/
 packages/cli/vendor/
 # Synced-for-publish skills inside the pi extension package
 integrations/pi/skills/
+.subagent-reports/

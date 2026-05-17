@@ -171,6 +171,28 @@ export function scaffold(opts: ScaffoldOptions): ScaffoldResult {
       writeText(dest, readText(baseSkillMd));
     }
   }
+
+  // Boilerplate-level aux dirs (e.g. an `upstream/` containing a vendored
+  // canonical skill) ship alongside the base SKILL.md. Mirrors what skills
+  // do with their own aux dirs further below. Anything at the boilerplate
+  // root that isn't a recognised structural dir is treated as agent-facing
+  // reference material.
+  const BOILERPLATE_AUX_SKIP = new Set([
+    'base',
+    'base-skill',
+    'skills',
+    'boilerplate.json',
+  ]);
+  const bpAuxEntries = readdirSync(bp.dir).filter((n) => !BOILERPLATE_AUX_SKIP.has(n));
+  for (const t of targets) {
+    const bpSkillDir = join(t.dir, bp.name);
+    for (const name of bpAuxEntries) {
+      const from = join(bp.dir, name);
+      if (statSync(from).isDirectory()) {
+        copyTree(from, join(bpSkillDir, name));
+      }
+    }
+  }
   // Skill-directory aux contents to copy alongside SKILL.md. Anything in the
   // skill dir that isn't `files/`, `manifest.json`, or the skillMd itself is
   // treated as agent-facing reference material and ships through.
