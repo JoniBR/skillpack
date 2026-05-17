@@ -12,7 +12,9 @@ need agent judgement.
 
 ```bash
 # Agent picks the boilerplate and skills it needs:
-/skillpack react remotion confetti
+/skillpack react remotion       # available now
+/skillpack react remotion recharts   # coming v0.3 (chart-driven animated reels)
+/skillpack slidev               # coming v0.3 (presentations as code, vendored from slidevjs's official skill)
 ```
 
 You get a ready-to-run project: dependencies installed, `Root.tsx` wired
@@ -153,7 +155,7 @@ How:
 
 - **Bundled boilerplates** (`react`, later `nextjs`, `vite-vanilla-ts`) —
   one CLI command, deterministic output, offline-capable.
-- **Boilerplate-scoped skills** (`react/remotion`, `react/confetti`, …) —
+- **Boilerplate-scoped skills** (`react/remotion`, `react/recharts`, `react/satori`, …) —
   each skill knows the conventions of its host boilerplate. No leaky
   abstractions.
 - **Footgun fixes shipped as code, not text.** When a skill's domain
@@ -195,7 +197,7 @@ Both shell out to the `skillpack` CLI on PATH, falling back to
 ### Scaffold
 
 ```bash
-skillpack scaffold react remotion confetti
+skillpack scaffold react remotion
 # → ./ if empty, refuses otherwise (use --into ./my-app to override)
 # → installs deps with the PM you invoked it with (pnpm dlx → pnpm, bunx → bun, …)
 # → writes .claude/skills/ and .pi/skills/
@@ -215,7 +217,7 @@ Flags:
 ### Prime a subagent
 
 ```bash
-skillpack prime --boilerplate react --skills remotion,confetti
+skillpack prime --boilerplate react --skills remotion
 ```
 
 Emits a single primer string (project tree, depth-limited and gitignore-aware,
@@ -234,7 +236,7 @@ skillpack list skills react
 
 ```bash
 skillpack add tanstack-query        # add a skill to an already-scaffolded project
-skillpack remove confetti           # reverse the safe parts; print a checklist for the rest
+skillpack remove recharts           # reverse the safe parts; print a checklist for the rest
 skillpack upgrade --detect          # warn when project's recorded versions are stale
 ```
 
@@ -251,14 +253,12 @@ my-app/
 ├── AGENTS.md              # always-on primer: tree, scripts, skills installed, skillpack metadata
 ├── .claude/skills/
 │   ├── react/SKILL.md
-│   ├── react-remotion/SKILL.md
-│   └── react-confetti/SKILL.md
+│   └── react-remotion/SKILL.md
 ├── .pi/skills/            # mirrors .claude/skills (cp, not symlink)
 │   └── …
 ├── .skillpack/state/      # per-skill content hashes for lifecycle ops
 │   ├── react.json
-│   ├── remotion.json
-│   └── confetti.json
+│   └── remotion.json
 ├── src/
 └── package.json
 ```
@@ -277,13 +277,7 @@ The `AGENTS.md` primer carries a machine-readable manifest block:
   "skills": [
     {
       "name": "remotion",
-      "version": "0.4.1",
-      "contentHash": "sha256:…",
-      "source": "bundled"
-    },
-    {
-      "name": "confetti",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "contentHash": "sha256:…",
       "source": "bundled"
     }
@@ -349,7 +343,7 @@ skillpack/
 - **v0.1** — CLI (`scaffold`, `prime`, `list`); `react` boilerplate with
   `remotion` skill; vendored eval harness; `skill-creator` meta-skill; both
   host integrations; one bundle eval scenario in CI.
-- **v0.2** — `confetti` and `tanstack-query` skills; `skillpack add/remove`
+- **v0.3** — `recharts` + `satori` skills under react, `slidev` as a new boilerplate; `skillpack add/remove`
   and `upgrade --detect`; `skill-migrator` meta-skill.
 - **v0.3** — `nextjs` and `vite-vanilla-ts` boilerplates;
   `boilerplate-creator` meta-skill; overlay registry.
