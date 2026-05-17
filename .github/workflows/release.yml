@@ -1,0 +1,51 @@
+name: Release to npm
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+# Trusted-publishing OIDC: GitHub mints a short-lived token at job runtime
+# and npm trusts it because the @skill-pack/* packages list this workflow
+# as a trusted publisher. No NPM_TOKEN secret anywhere.
+#
+# Setup on npmjs.com (once per package, OR once at the org level after
+# the initial bootstrap publish):
+#   Settings → Publishing access → Trusted publishers → Add
+#     Provider: GitHub Actions
+#     Org/user: JoniBR
+#     Repo:    skillpack
+#     Workflow: release.yml
+#     Environment: npm-publish    (matches `environment:` below)
+permissions:
+  contents: read
+  id-token: write   # required for OIDC token minting
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          # Setting registry-url makes the publish step use OIDC via npm CLI 11+.
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r typecheck
+      - run: pnpm -r test
+
+      # Ensures dist/ + staged bundles are fresh for the prepublishOnly hook.
+      - run: pnpm --filter @skill-pack/cli build
+      - run: pnpm --filter @skill-pack/pi build
+
+      - name: Publish via changesets (uses OIDC; no NPM_TOKEN)
+        run: pnpm release

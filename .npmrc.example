@@ -1,0 +1,6 @@
+# Copy to .npmrc and fill in:
+#   1. cp .npmrc.example .npmrc
+#   2. Replace YOUR_TOKEN with an npm automation token scoped to @skill-pack/*
+#   3. NEVER commit .npmrc (it's gitignored)
+//registry.npmjs.org/:_authToken=YOUR_TOKEN
+@skill-pack:registry=https://registry.npmjs.org/
