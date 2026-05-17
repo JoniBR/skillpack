@@ -1,6 +1,6 @@
 {
   "name": "@skill-pack/pi",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "pi extension package for skill-pack: contributes the /skillpack prompt template + meta-skills.",
   "license": "MIT",
   "keywords": [
