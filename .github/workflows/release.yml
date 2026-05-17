@@ -34,10 +34,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # Node 22 ships npm 10.x; we upgrade to 11.5+ below for OIDC
           cache: pnpm
-          # Setting registry-url makes the publish step use OIDC via npm CLI 11+.
+          # `registry-url` writes ~/.npmrc with the registry + AUTH placeholder
+          # so npm publish picks up the OIDC token automatically.
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade to npm 11.5.1+ (required for OIDC trusted publishing)
+        run: npm install -g npm@latest
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm -r typecheck
