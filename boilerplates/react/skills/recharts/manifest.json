@@ -1,15 +1,22 @@
 {
   "schemaVersion": 1,
   "name": "recharts",
-  "version": "0.1.0",
-  "description": "Composable charts for React via Recharts 2 — wires a sample <Dashboard /> (Line + Bar + Area, all responsive) into the scaffolded app so the project ships with a working analytics page on first `npm run dev`.",
+  "version": "0.1.1",
+  "description": "Composable charts for React via Recharts 2 \u2014 wires a sample <Dashboard /> (Line + Bar + Area, all responsive) into the scaffolded app so the project ships with a working analytics page on first `npm run dev`.",
   "deps": {
     "recharts": "^2.13.0"
   },
   "devDeps": {},
   "files": [
-    { "from": "files/src/components/Dashboard.tsx", "to": "src/components/Dashboard.tsx" },
-    { "from": "files/vitest.setup.ts", "to": "vitest.setup.ts", "overwrite": true }
+    {
+      "from": "files/src/components/Dashboard.tsx",
+      "to": "src/components/Dashboard.tsx"
+    },
+    {
+      "from": "files/vitest.setup.ts",
+      "to": "vitest.setup.ts",
+      "overwrite": true
+    }
   ],
   "jsonPatches": [],
   "markers": [
@@ -17,7 +24,9 @@
       "file": "src/App.tsx",
       "marker": "mount",
       "insert": "<Dashboard />",
-      "imports": ["import { Dashboard } from './components/Dashboard';"]
+      "imports": [
+        "import { Dashboard } from './components/Dashboard';"
+      ]
     }
   ],
   "skillMd": "SKILL.md"

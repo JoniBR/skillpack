@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "slidev",
     "build": "slidev build",
-    "export": "slidev export"
+    "export": "slidev export",
+    "export:setup": "pnpm add -D playwright-chromium && pnpm exec playwright install chromium"
   },
   "dependencies": {
     "@slidev/cli": "^52.15.2",

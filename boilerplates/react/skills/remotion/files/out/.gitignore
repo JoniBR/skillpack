@@ -1,0 +1,5 @@
+# Rendered video output lives here. Ignore everything except this file
+# itself, so the directory is committed (skillpack's `video:render` script
+# expects it) but generated MP4s are not.
+*
+!.gitignore

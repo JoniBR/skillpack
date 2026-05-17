@@ -46,6 +46,7 @@ The 80/20 of Recharts is a small set of pieces that compose:
 | `<Tooltip>`             | Hover-driven readout. Pass `content={<MyTip />}` to customise. |
 | `<Legend>`              | Series legend, auto-derived from `dataKey`s.                 |
 | `<Line>` / `<Bar>` / `<Area>` / `<Pie>` / `<Scatter>` | Series — one per metric. |
+| `<Cell>`                | Per-datum override (esp. `fill`) inside `<Bar>` / `<Pie>`.   |
 | `<Brush>`               | Range selector at the bottom; great for long time series.    |
 | `<ReferenceLine>` / `<ReferenceArea>` / `<ReferenceDot>` | Annotations.    |
 
@@ -66,9 +67,25 @@ Every chart follows the same shape:
 </ResponsiveContainer>
 ```
 
-Two series? Add a second `<Line dataKey="cost" />`. Want a stacked area?
-Set `stackId="a"` on each `<Area>`. Want bars and a line together? Swap
-the root for `<ComposedChart>` and nest `<Bar>` + `<Line>` as siblings.
+Two series? Add a second `<Line dataKey="cost" />` — the default
+`<Tooltip>` will read every `<Line>` / `<Bar>` / `<Area>` and show all
+values on hover. Want a stacked area? Set `stackId="a"` on each
+`<Area>`. For a **diverging stack** (e.g. churn below zero, new MRR
+above zero) also set `stackOffset="sign"` on the chart root, otherwise
+negative values pile on top of the positives. Want bars and a line
+together? Swap the root for `<ComposedChart>` and nest `<Bar>` +
+`<Line>` as siblings. Want per-bar colours (e.g. red/amber/green by
+status)? Don't pass a function to `<Bar fill>` — Recharts 2 evaluates
+it once. Render `<Cell fill={…} />` children inside `<Bar>` instead,
+one per row.
+
+```tsx
+<Bar dataKey="revenue">
+  {rows.map((r) => (
+    <Cell key={r.segment} fill={r.pct >= 1 ? '#10b981' : '#ef4444'} />
+  ))}
+</Bar>
+```
 
 ## Data shape
 
@@ -122,6 +139,36 @@ long-format / pivot helper — reshape your data yourself (or use
 8. **Don't import from `recharts/es6` or deep paths.** The published
    entry handles tree-shaking; deep imports break in Recharts 3 and
    already warn in 2.x.
+
+## Accessibility (do this, it's two props)
+
+Every cartesian chart in Recharts 2.10+ accepts `accessibilityLayer`
+(keyboard nav, focus ring, screen-reader ticks) and a plain
+`aria-label`. Add both on every chart you ship:
+
+```tsx
+<LineChart data={rows} accessibilityLayer aria-label="Monthly revenue, in USD">
+  …
+</LineChart>
+```
+
+Describe what the chart *is*, not what it looks like. See
+`references/composing-charts.md` §4 for the full a11y checklist
+(visible focus styles, data-table fallback, don't-rely-on-colour).
+
+## Layout & responsive breakpoints
+
+The scaffold's grid uses `repeat(auto-fit, minmax(320px, 1fr))` which
+gives a soft breakpoint based on tile size. For an **exact** pixel
+breakpoint (e.g. "2-up ≥768px, 1-up below"), drop a real `@media` rule:
+
+```tsx
+<style>{`@media (max-width: 767px) { .dashboard-grid { grid-template-columns: 1fr !important; } }`}</style>
+<div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>…</div>
+```
+
+Auto-fit alone won't honour a specific px cut-over because it sizes
+from tile width, not viewport width.
 
 ## Custom tooltip
 

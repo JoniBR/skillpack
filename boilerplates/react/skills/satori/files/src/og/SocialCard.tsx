@@ -38,7 +38,9 @@ export function SocialCard({
         padding: '72px',
         color: '#f8fafc',
         fontFamily: 'Inter',
-        // Satori supports linear-gradient backgroundImage. Keep colors hex/rgb.
+        // Satori supports linear-gradient backgroundImage. Colors inside
+        // gradients MUST be hex or rgb — hsl()/named colors crash satori
+        // 0.10's gradient parser with "Missing )". See SKILL.md footgun #4.
         backgroundImage:
           'linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #7c3aed 100%)',
       }}

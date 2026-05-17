@@ -1,6 +1,6 @@
 ---
 name: react-remotion
-description: Programmatic video composition with Remotion 4 in this React project. Use whenever the user wants to create, edit, or render a video — product reels, animated trailers, motion graphics, social cuts, captioned tutorials, anything composed as React components and rendered as MP4. This skill wraps the canonical Remotion team's `remotion-best-practices` skill (under `upstream/`) and explains how it's wired into this specific skillpack-scaffolded project. Use this skill instead of generic React advice whenever Remotion files are involved.
+description: Programmatic video composition with Remotion 4 in this React project. Use whenever the user wants to create, edit, or render a video — product reels, animated trailers, motion graphics, social cuts, captioned tutorials, anything composed as React components and rendered as MP4. The scaffold is fully wired (composition registered, `<Player />` mounted, headless render script, `out/` git-ignored). Wraps the canonical Remotion team's `remotion-best-practices` skill (under `upstream/`) for deep API guidance. Use this skill instead of generic React advice whenever Remotion files are involved.
 ---
 
 # Remotion (skillpack react skill)
@@ -20,18 +20,93 @@ project setup" — skip that step). Specifically, the scaffold has already:
 
 - Installed `remotion`, `@remotion/cli`, `@remotion/player`, and
   `@remotion/media`.
-- Registered `MyVideo` as a `<Composition />` in `src/video/Root.tsx`.
+- Registered `MyVideo` as a `<Composition />` in `src/video/Root.tsx`
+  (1080×1080, 30 fps, 450 frames = 15 s).
 - Mounted a live preview at the React app's home page via
   `src/components/VideoPreview.tsx` (using `@remotion/player`).
 - Added `npm run video:preview` (opens Remotion Studio) and
   `npm run video:render` (renders headlessly to `out/video.mp4`).
+- Created `out/` with a `.gitignore` that ignores all rendered files so
+  large MP4s never get committed.
 - Configured `remotion.config.ts` with sensible defaults
   (`setVideoImageFormat('jpeg')`, `setOverwriteOutput(true)`).
+- Set `acknowledgeRemotionLicense` on the in-app `<Player />` so vitest
+  and dev-server output isn't polluted with the license notice. **This
+  prop only silences the warning** — if you ship the video commercially
+  inside a company that needs a license, see https://remotion.dev/license.
 
 So the typical first session looks like: edit `src/video/MyVideo.tsx`,
 preview at `localhost:5173` (in-app `<Player />`) or
 `npm run video:preview` (Remotion Studio), then `npm run video:render`
 when ready.
+
+## Pitfalls — read this BEFORE editing anything
+
+These are footguns that bite cold agents on first contact. The scaffold
+is already correct; the rules are about what NOT to break.
+
+1. **Don't remove `registerRoot(RemotionRoot)` from `src/video/Root.tsx`.**
+   Without it, `remotion render` fails with
+   `"this file does not contain registerRoot"` and the CLI offers no
+   workaround. The scaffold's `Root.tsx` already calls it at the bottom.
+
+2. **Bare relative imports inside `src/video/` — no `.js` extension.**
+   Remotion's webpack-based bundler ignores the TypeScript
+   `.js`-for-TS-files convention. `import { MyVideo } from './MyVideo.js'`
+   fails the headless render with `"MyVideo.js doesn't exist"`. The Vite
+   dev server happily resolves either form, so the bug only surfaces at
+   render time. The scaffold uses bare imports throughout `src/video/`
+   and in `VideoPreview.tsx`'s import of `../video/MyVideo` — keep it
+   that way. (The marker-inserted `App.tsx` import uses `.js` because
+   that file is Vite-only and never goes through Remotion's bundler.)
+
+3. **`npm run video:render` writes to `out/video.mp4` by default.**
+   To override the path, **set the `OUT` env var** — do NOT try to
+   append the path as a positional CLI arg:
+   ```bash
+   OUT=out/jetpack.mp4 npm run video:render
+   ```
+   The hardcoded positional path means `npm run video:render -- out/foo.mp4`
+   is silently ignored (the extra arg goes past Remotion's positional
+   parser and the file still lands at `out/video.mp4`). If you can't
+   use env vars, bypass the script: `npx remotion render src/video/Root.tsx
+   MyVideo out/foo.mp4`.
+
+4. **CSS transitions / animations are FORBIDDEN.** Same for Tailwind
+   animation class names. They will not render correctly. Drive every
+   visual change from `useCurrentFrame()` + `interpolate()` or `spring()`.
+   See `upstream/rules/timing.md` and `references/timing-and-easing.md`.
+
+5. **Use `<Img>`, `<Video>`, `<Audio>` from `remotion` / `@remotion/media`,
+   not bare `<img>` / `<video>` / `<audio>`.** The wrappers integrate with
+   Remotion's frame clock and asset preloader; the raw tags don't.
+
+6. **Reference public assets via `staticFile('foo.png')`, never with raw
+   paths like `'/foo.png'`.** Raw paths break under `remotion render`.
+
+7. **`useCurrentFrame()` and `useVideoConfig().durationInFrames` rebase
+   inside `<Sequence>`.** Inside a `<Sequence from={150} durationInFrames={75}>`,
+   `useCurrentFrame()` starts at 0 and `durationInFrames` is 75 — not the
+   parent composition's 450. The scaffolded `Caption` relies on this to
+   compute its tail fade-out. Don't pass timing as props; read it from
+   `useVideoConfig()`.
+
+8. **If you change `Root.tsx` composition geometry, mirror it in
+   `VideoPreview.tsx`.** The `<Player />` props (`durationInFrames`,
+   `compositionWidth`, `compositionHeight`, `fps`) duplicate what's in
+   `Root.tsx`'s `<Composition />`. There's no single-source-of-truth
+   helper; they drift if you forget.
+
+## Rendering recipes
+
+| Want                          | Command                                                                                  |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| Default render → `out/video.mp4` | `npm run video:render`                                                                |
+| Custom output path            | `OUT=out/jetpack.mp4 npm run video:render`                                               |
+| Bypass the script entirely    | `npx remotion render src/video/Root.tsx MyVideo out/jetpack.mp4`                         |
+| Render a *different* comp id  | `npx remotion render src/video/Root.tsx AnotherComp out/another.mp4`                     |
+| Open the interactive studio   | `npm run video:preview`                                                                  |
+| In-app preview (React app)    | `npm run dev`, then open `http://localhost:5173`                                         |
 
 ## File layout (this project's conventions)
 
@@ -43,19 +118,11 @@ when ready.
 | `src/components/VideoPreview.tsx` | `<Player />` mounted in `<App />` for live in-app preview.   |
 | `remotion.config.ts`              | `remotion render` CLI config.                                |
 | `public/`                         | Static assets — reference with `staticFile('foo.png')`.      |
+| `out/`                            | Rendered MP4s land here; git-ignored except for `.gitignore`. |
 
 The Remotion **Studio** (interactive editor) and the Remotion **render**
 CLI both target `src/video/Root.tsx` — never delete or move that file
 without updating both `package.json` scripts.
-
-## Scripts added by this skill
-
-| Script          | Command                                                    |
-| --------------- | ---------------------------------------------------------- |
-| `video:preview` | `remotion studio src/video/Root.tsx`                       |
-| `video:render`  | `remotion render src/video/Root.tsx MyVideo out/video.mp4` |
-
-In-app preview at `localhost:5173` via the existing `npm run dev` works too.
 
 ## Default composition geometry
 
@@ -65,6 +132,8 @@ In-app preview at `localhost:5173` via the existing `npm run dev` works too.
 - 1080p landscape: `width={1920} height={1080}`
 - Vertical / Reels / Shorts: `width={1080} height={1920}`
 - Square (current default): `width={1080} height={1080}`
+
+Remember pitfall #8: if you change these, mirror them in `VideoPreview.tsx`.
 
 ## How to use the upstream skill
 
@@ -89,37 +158,6 @@ Concretely, common references the upstream skill points to:
 - `upstream/rules/calculate-metadata.md` — dynamic duration/dimensions.
 - `upstream/rules/voiceover.md` — ElevenLabs TTS.
 - 26 more — see `upstream/SKILL.md` for the full catalogue.
-
-## skillpack-specific pitfalls (found in eval iteration 3)
-
-Two Remotion 4 footguns that fresh agents tend to hit:
-
-1. **`src/video/Root.tsx` must call `registerRoot(RemotionRoot)`.** Without
-   it, `remotion render` fails with `"this file does not contain
-registerRoot"` (and the error cannot be suppressed from the CLI). Our
-   scaffold already includes this call — don't remove it.
-2. **Use bare relative imports inside `src/video/` (no `.js` extension).**
-   Remotion's webpack-based bundler does NOT honour the TypeScript
-   `.js`-extension-for-TS-files convention; `import { MyVideo } from
-'./MyVideo.js'` fails the headless render with `"MyVideo.js doesn't
-exist"`. Our scaffold uses bare imports for this reason. Vite (used by
-   the in-app `<Player />` preview) is happy with either form, so the dev
-   server won't surface the bug — only the render does.
-
-## Hard rules to remember (from upstream)
-
-The upstream skill is explicit about a few non-negotiables:
-
-- **CSS transitions and CSS animations are FORBIDDEN** in Remotion
-  components — they don't render correctly. Drive every visual change
-  from `useCurrentFrame()` + `interpolate()` or `spring()`.
-- **Tailwind animation classes are FORBIDDEN** for the same reason.
-  Tailwind for static styling is fine (`upstream/rules/tailwind.md`).
-- Use `<Img>`, `<Video>`, `<Audio>` from `remotion` / `@remotion/media`,
-  not bare `<img>` / `<video>` / `<audio>` — the wrappers integrate with
-  Remotion's frame clock and asset preloader.
-- Reference public assets via `staticFile('foo.png')`, never with raw
-  paths like `'/foo.png'` — the latter breaks under `remotion render`.
 
 ## When in doubt
 

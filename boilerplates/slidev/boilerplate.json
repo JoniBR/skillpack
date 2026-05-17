@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "name": "slidev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slidev: markdown-driven slide decks for developers (Vite + Vue), with the official slidevjs agent skill bundled."
 }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "name": "remotion",
-  "version": "0.2.1",
-  "description": "Programmatic video composition with Remotion 4, wired into this React project: a 1080x1080 default <Composition>, an in-app <Player /> preview, and `npm run video:render` for headless MP4. Wraps the canonical Remotion team's `remotion-best-practices` skill (vendored under upstream/) for deep API guidance.",
+  "version": "0.3.0",
+  "description": "Programmatic video composition with Remotion 4, wired into this React project: a 1080x1080 default <Composition>, an in-app <Player /> preview, and `npm run video:render` for headless MP4 (default out path: `out/video.mp4`; override via `OUT=path/to.mp4 npm run video:render`). Wraps the canonical Remotion team's `remotion-best-practices` skill (vendored under upstream/) for deep API guidance.",
   "deps": {
     "remotion": "^4.0.220",
     "@remotion/cli": "^4.0.220",
@@ -15,7 +15,8 @@
     { "from": "files/src/video/MyVideo.tsx", "to": "src/video/MyVideo.tsx" },
     { "from": "files/src/video/Caption.tsx", "to": "src/video/Caption.tsx" },
     { "from": "files/src/components/VideoPreview.tsx", "to": "src/components/VideoPreview.tsx" },
-    { "from": "files/remotion.config.ts", "to": "remotion.config.ts" }
+    { "from": "files/remotion.config.ts", "to": "remotion.config.ts" },
+    { "from": "files/out/.gitignore", "to": "out/.gitignore" }
   ],
   "jsonPatches": [
     {
@@ -23,7 +24,7 @@
       "merge": {
         "scripts": {
           "video:preview": "remotion studio src/video/Root.tsx",
-          "video:render": "remotion render src/video/Root.tsx MyVideo out/video.mp4"
+          "video:render": "remotion render src/video/Root.tsx MyVideo ${OUT:-out/video.mp4}"
         }
       }
     }

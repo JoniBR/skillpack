@@ -1,6 +1,6 @@
 ---
 name: slidev
-description: Conventions for a Slidev (Vite + Vue) markdown-driven slide deck scaffolded by skillpack. Use whenever the user wants to build, edit, or export a technical presentation — conference talks, code walkthroughs, demo decks, teaching slides, internal lightning talks, anything authored as `slides.md` with developer-friendly code highlighting, animations, and live components. This is the project preamble; for Slidev syntax, layouts, animations, exporting, and the full feature catalogue, load the bundled canonical skill at `.claude/skills/slidev/upstream/SKILL.md` (or `.pi/skills/slidev/upstream/SKILL.md`).
+description: Conventions for a Slidev (Vite + Vue) markdown-driven slide deck scaffolded by skillpack. Use whenever the user wants to build, edit, or export a technical presentation — conference talks, code walkthroughs, demo decks, teaching slides, internal lightning talks, anything authored as `slides.md` with developer-friendly code highlighting, animations, and live components. This is the project preamble; for Slidev syntax, layouts, animations, exporting, and the full feature catalogue, load the bundled canonical skill at `.claude/skills/slidev/upstream/SKILL.md` (or `.pi/skills/slidev/upstream/SKILL.md`). The "Overlays" section at the end of THIS file lists the skillpack-specific deltas that the upstream skill gets wrong on a fresh scaffold — read those before running `pnpm export`.
 ---
 
 # slidev (skillpack base)
@@ -22,7 +22,8 @@ is the official Slidev starter — Vite + Vue 3 + a single markdown file
 | -------- | --------------- | ------------------------------------------------------- |
 | `dev`    | `slidev`        | Dev server at `http://localhost:3030` with HMR          |
 | `build`  | `slidev build`  | Build a static SPA into `./dist/`                       |
-| `export` | `slidev export` | Export to PDF (needs `pnpm add -D playwright-chromium`) |
+| `export`       | `slidev export`         | Export to PDF — needs **both** `pnpm add -D playwright-chromium` *and* `pnpm exec playwright install chromium`. See Overlays §1 below. |
+| `export:setup` | (combined install cmd) | One-shot: installs `playwright-chromium` and downloads the chromium binary. Run this once before the first `pnpm export`. |
 
 ## Project conventions
 
@@ -47,3 +48,63 @@ covering every Slidev feature (code highlighting, magic-move, Monaco editor,
 LaTeX, Mermaid, draggable elements, presenter notes, recording, PDF export,
 OG image, SEO, …). It is the source of truth for Slidev API knowledge; this
 file only documents what skillpack already wired up.
+
+## Overlays — places upstream docs are wrong on a fresh skillpack scaffold
+
+### 1. `slidev export` to PDF needs two install steps, not one
+
+The upstream skill (and Slidev's own runtime error) say:
+
+> please install it via `npm i -D playwright-chromium`
+
+That is **necessary but not sufficient**. After installing the npm
+package you must also download the browser binary:
+
+```bash
+pnpm add -D playwright-chromium
+pnpm exec playwright install chromium     # ← missing from upstream docs
+pnpm export
+```
+
+This scaffold ships a one-shot helper: `pnpm run export:setup`.
+
+If `pnpm export` prints the misleading
+`please install it via npm i -D playwright-chromium` error *after*
+you've already added the package, the real failure is the missing
+chromium binary, not the npm package — run `pnpm exec playwright
+install chromium` and retry.
+
+### 2. Ignore noisy Vite 8 / rolldown stack traces
+
+`pnpm export` (and occasionally `pnpm build`) emits a multi-screen
+`vite:dep-scan:resolve` / "The server is being restarted or closed"
+rolldown trace before doing the real work. It is **harmless**. Look at
+the *last* line (`✓ exported to ./slides-export.pdf` or `✓ built in N s`)
+to decide whether it succeeded.
+
+Likewise, `pnpm install` warns:
+`✕ unmet peer vite@"...^7.0.0": found 8.0.13` for
+`unplugin-vue-markdown`, `vite-plugin-inspect`, `shiki-magic-move`.
+Slidev 52 works fine on Vite 8 in practice; do **not** "fix" this by
+pinning an older Vite — that breaks the build.
+
+### 3. Headmatter vs per-slide frontmatter
+
+The **first** `---`-delimited YAML block in `slides.md` is the
+deck-wide **headmatter** (`theme`, `title`, `info`, `highlighter`,
+`lineNumbers`, `transition`, fonts, …). Every subsequent
+`---`-delimited block is the **frontmatter for the next slide**
+(`layout`, `class`, `transition`, layout props like `image:` for
+`image-right`).
+
+Common mistake: putting `layout: two-cols` in the headmatter — that
+sets the *default* layout for all slides, which is almost never what
+you want. Put it in the per-slide frontmatter instead.
+
+### 4. Only two themes ship pre-installed
+
+`@slidev/theme-default` and `@slidev/theme-seriph`. Switch between them
+by editing the `theme:` field in headmatter — no install needed. For
+any other theme (`@slidev/theme-apple-basic`, community themes), add it
+with `pnpm add -D @slidev/theme-<name>` first, or let `pnpm dev` prompt
+you on first run.

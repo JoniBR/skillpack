@@ -21,6 +21,12 @@ export function VideoPreview(): JSX.Element {
         compositionHeight={1080}
         fps={30}
         controls
+        // Suppresses the "Some companies are required to obtain a license"
+        // log line that <Player /> prints on mount (also shown in vitest
+        // output during the App test). See https://remotion.dev/license
+        // before shipping commercially — this prop only silences the
+        // notice, it does NOT grant a license.
+        acknowledgeRemotionLicense
         style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: 12, overflow: 'hidden' }}
       />
     </section>

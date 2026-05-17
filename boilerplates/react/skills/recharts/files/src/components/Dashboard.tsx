@@ -80,7 +80,12 @@ export function Dashboard(): JSX.Element {
       <div style={cardStyle}>
         <h3 style={{ marginTop: 0 }}>Monthly revenue</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={monthlyRevenue} margin={{ top: 8, right: 24, bottom: 8, left: 0 }}>
+          <LineChart
+            data={monthlyRevenue}
+            margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
+            accessibilityLayer
+            aria-label="Monthly revenue, in USD"
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
             <XAxis dataKey="month" />
             <YAxis />
@@ -102,7 +107,12 @@ export function Dashboard(): JSX.Element {
       <div style={cardStyle}>
         <h3 style={{ marginTop: 0 }}>Sales by category</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={categorySales} margin={{ top: 8, right: 24, bottom: 8, left: 0 }}>
+          <BarChart
+            data={categorySales}
+            margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
+            accessibilityLayer
+            aria-label="Sales by product category, in USD"
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
             <XAxis dataKey="category" />
             <YAxis />
@@ -116,7 +126,12 @@ export function Dashboard(): JSX.Element {
       <div style={cardStyle}>
         <h3 style={{ marginTop: 0 }}>Cumulative user growth</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={cumulativeGrowth} margin={{ top: 8, right: 24, bottom: 8, left: 0 }}>
+          <AreaChart
+            data={cumulativeGrowth}
+            margin={{ top: 8, right: 24, bottom: 8, left: 0 }}
+            accessibilityLayer
+            aria-label="Cumulative user growth over the year"
+          >
             <defs>
               <linearGradient id="usersFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />

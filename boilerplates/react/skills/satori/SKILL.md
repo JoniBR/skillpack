@@ -43,6 +43,22 @@ template **must not** import browser-only APIs (no `window`, no `document`,
 no Vite-resolved `import logo from './logo.png'`, no CSS modules). Treat
 `src/og/` as a Node-compatible island inside the React project.
 
+Two small TS conventions worth copying when you add a new template /
+generator:
+
+- **Import with a `.js` extension even though the file is `.tsx`** —
+  e.g. `import { SocialCard } from '../src/og/SocialCard.js'`. This is
+  required by the project’s ESM/NodeNext module resolution. It looks
+  wrong but is correct.
+- **Invoke the template as a plain function**, not as JSX:
+  ```ts
+  const element = SocialCard(props) as Parameters<typeof satori>[0];
+  const svg = await satori(element, { width, height, fonts });
+  ```
+  This avoids a JSX-runtime mismatch between the Node script and the
+  Vite app, and sidesteps a `ReactNode` vs `ReactElement` type error
+  under strict TS.
+
 ## Scripts added by this skill
 
 | Script        | Command                |
@@ -73,15 +89,34 @@ Things that bite fresh agents using satori in this scaffold:
    no CSS variables, no `calc()`. Limited transforms (translate / scale
    / rotate only, leaf nodes only). See `upstream/SKILL.md` for the
    full whitelist.
-4. **Fixed pixel sizes.** Width and height are passed to `satori()` in
+4. **Colors in gradients must be hex or rgb — NOT `hsl()`.** satori
+   0.10’s `css-gradient-parser` throws `Missing )` on any `hsl(…)`
+   stop inside `linear-gradient` / `radial-gradient`. CSS named colors
+   (`tomato`, `rebeccapurple`, etc.) and `hsla()` also fail in gradients.
+   Solid `backgroundColor` accepts more (named colors, `hsl()`, etc.),
+   but gradients do not. If you need a per-item color derived from a
+   hash / slug, compute HSL and convert to `#rrggbb` before interpolating
+   into the gradient string. Example helper:
+   ```ts
+   function hslToHex(h: number, s: number, l: number) {
+     const a = (s * Math.min(l, 1 - l)) / 100;
+     const f = (n: number) => {
+       const k = (n + h / 30) % 12;
+       const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+       return Math.round(255 * c).toString(16).padStart(2, '0');
+     };
+     return `#${f(0)}${f(8)}${f(4)}`;
+   }
+   ```
+5. **Fixed pixel sizes.** Width and height are passed to `satori()` in
    px. Inside the JSX, avoid `vh` / `vw` / `%` of the viewport (most
    percentage values work as percent-of-parent but not as
    percent-of-canvas).
-5. **Network access is required by default.** Font fetching hits
+6. **Network access is required by default.** Font fetching hits
    jsDelivr. For air-gapped / CI environments, vendor the font binaries
    under `public/fonts/` and read them with `fs.readFile` instead of
    `fetch`.
-6. **Cache fonts across calls.** Satori uses a `WeakMap` keyed on the
+7. **Cache fonts across calls.** Satori uses a `WeakMap` keyed on the
    fonts array reference — recreating the array on each render misses
    the cache and costs ~2× perf. Our script caches via a module-level
    promise; preserve that pattern if you refactor.
