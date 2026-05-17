@@ -1,6 +1,6 @@
 {
   "name": "@skill-pack/claude-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Claude Code plugin for skill-pack: contributes the /skillpack slash command + meta-skills.",
   "license": "MIT",
   "private": false,
