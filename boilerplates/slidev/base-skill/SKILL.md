@@ -18,11 +18,11 @@ is the official Slidev starter — Vite + Vue 3 + a single markdown file
   thank-you). Edit in place.
 - npm scripts wired:
 
-| Script   | Command         | What it does                                              |
-| -------- | --------------- | --------------------------------------------------------- |
-| `dev`    | `slidev`        | Dev server at `http://localhost:3030` with HMR            |
-| `build`  | `slidev build`  | Build a static SPA into `./dist/`                         |
-| `export` | `slidev export` | Export to PDF (needs `pnpm add -D playwright-chromium`)   |
+| Script   | Command         | What it does                                            |
+| -------- | --------------- | ------------------------------------------------------- |
+| `dev`    | `slidev`        | Dev server at `http://localhost:3030` with HMR          |
+| `build`  | `slidev build`  | Build a static SPA into `./dist/`                       |
+| `export` | `slidev export` | Export to PDF (needs `pnpm add -D playwright-chromium`) |
 
 ## Project conventions
 

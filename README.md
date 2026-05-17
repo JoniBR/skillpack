@@ -13,8 +13,8 @@ need agent judgement.
 ```bash
 # Agent picks the boilerplate and skills it needs:
 /skillpack react remotion       # available now
-/skillpack react remotion recharts   # coming v0.3 (chart-driven animated reels)
-/skillpack slidev               # coming v0.3 (presentations as code, vendored from slidevjs's official skill)
+/skillpack react remotion recharts   # chart-driven animated reels
+/skillpack slidev               # presentations (vendored slidevjs official skill ships automatically)
 ```
 
 You get a ready-to-run project: dependencies installed, `Root.tsx` wired
@@ -56,7 +56,7 @@ skillpack is **not** the right tool when:
   scaffold-once doesn't help here; you want a long-lived
   `CLAUDE.md`/`AGENTS.md` instead.
 - The boilerplate you'd need doesn't exist yet — you can write one with
-  `skillpack-boilerplate-creator` (v0.3), but for a one-off you'll
+  `skillpack-boilerplate-creator` (v0.4), but for a one-off you'll
   probably just hand-bootstrap.
 - The task is dominated by genuine domain reasoning (e.g. "design our
   retry policy"), not by setup. skillpack doesn't help with judgement
@@ -232,7 +232,7 @@ skillpack list boilerplates
 skillpack list skills react
 ```
 
-### Lifecycle (v0.2)
+### Lifecycle (v0.6)
 
 ```bash
 skillpack add tanstack-query        # add a skill to an already-scaffolded project
@@ -340,16 +340,50 @@ skillpack/
 
 ## Roadmap
 
+**Shipped**
+
 - **v0.1** — CLI (`scaffold`, `prime`, `list`); `react` boilerplate with
-  `remotion` skill; vendored eval harness; `skill-creator` meta-skill; both
-  host integrations; one bundle eval scenario in CI.
-- **v0.3** — `recharts` + `satori` skills under react, `slidev` as a new boilerplate; `skillpack add/remove`
-  and `upgrade --detect`; `skill-migrator` meta-skill.
-- **v0.3** — `nextjs` and `vite-vanilla-ts` boilerplates;
-  `boilerplate-creator` meta-skill; overlay registry.
-- **Phase 2** — remote community registry resolver; TypeScript port of the
-  vendored Python; real `skillpack upgrade` with diff-and-reapply; schema
-  migrations as needed; signed/sandboxed community `setup.ts`.
+  the `remotion` skill; vendored eval harness; `skill-creator` meta-skill;
+  both host integrations; first bundle eval (−0 turns, all green).
+- **v0.2** — npm release pipeline (changesets + OIDC trusted publishing);
+  CI; first public `@skill-pack/cli`, `@skill-pack/pi`, `@skill-pack/claude-plugin`
+  on the registry; three-way eval (n=3) with downloadable MP4 artefacts.
+- **v0.3** — `recharts` + `satori` skills under `react`; `slidev` as a new
+  boilerplate (with the official slidevjs skill vendored); scaffolder
+  copies boilerplate-level `upstream/` aux dirs by default; full eval
+  bundle composition story (`/skillpack react remotion recharts satori`).
+
+**Next**
+
+- **v0.4 — community-authoring v1** _(in progress)_. Ship the missing
+  meta-skills so anyone can author skills + boilerplates locally without
+  forking this repo:
+  - `skill-migrator` meta-skill — convert an existing general SKILL.md
+    into a skillpack skill (LLM-driven inference).
+  - `boilerplate-creator` meta-skill — author a new boilerplate from
+    scratch, with smoke-test acceptance criteria.
+  - **Overlay registry** at `~/.skill-pack/{boilerplates,skills}/` —
+    user-authored skills auto-merge with bundled at scaffold time; the
+    `list` commands now show source (`bundled` / `overlay`).
+  - `skillpack boilerplate scaffold --name <bp>` CLI command — creates the
+    boilerplate skeleton at the overlay location.
+- **v0.5 — sharing v1**. `skillpack publish <skill>` packages a skill
+  and walks the author through publishing to GitHub (with the
+  `skillpack-skill` topic for zero-infra discovery) or npm under their
+  scope. `skillpack add github:user/repo` installs from GitHub via degit.
+  Light gallery: linked from this README to
+  [`github.com/topics/skillpack-skill`](https://github.com/topics/skillpack-skill).
+- **v0.6 — lifecycle commands**. `skillpack add` / `remove` /
+  `upgrade --detect` (DESIGN.md Q14). Lands after the sharing flow
+  exists, because that's when "scaffold lean, add as needed" actually
+  has community skills to add.
+- **v0.7+ — more bundled boilerplates**. `nextjs` (unlocks `auth`,
+  `prisma`, `stripe`, `resend` skills), `vite-vanilla-ts`,
+  `astro`.
+- **Phase 2** — curated remote registry alongside the GitHub topic;
+  TypeScript port of the vendored Anthropic eval scripts; real
+  `skillpack upgrade` with diff-and-reapply; schema migrations as needed;
+  signed / sandboxed community `setup.ts`.
 
 ## License
 

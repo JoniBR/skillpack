@@ -177,12 +177,7 @@ export function scaffold(opts: ScaffoldOptions): ScaffoldResult {
   // do with their own aux dirs further below. Anything at the boilerplate
   // root that isn't a recognised structural dir is treated as agent-facing
   // reference material.
-  const BOILERPLATE_AUX_SKIP = new Set([
-    'base',
-    'base-skill',
-    'skills',
-    'boilerplate.json',
-  ]);
+  const BOILERPLATE_AUX_SKIP = new Set(['base', 'base-skill', 'skills', 'boilerplate.json']);
   const bpAuxEntries = readdirSync(bp.dir).filter((n) => !BOILERPLATE_AUX_SKIP.has(n));
   for (const t of targets) {
     const bpSkillDir = join(t.dir, bp.name);

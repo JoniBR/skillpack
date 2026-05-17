@@ -12,12 +12,6 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['src/**/*.test.ts'],
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      'boilerplates/**',
-      'meta-skills/**',
-      'vendor/**',
-    ],
+    exclude: ['**/node_modules/**', '**/dist/**', 'boilerplates/**', 'meta-skills/**', 'vendor/**'],
   },
 });
