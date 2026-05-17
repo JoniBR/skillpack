@@ -40,8 +40,14 @@ jobs:
           # so npm publish picks up the OIDC token automatically.
           registry-url: https://registry.npmjs.org
 
-      - name: Upgrade to npm 11.5.1+ (required for OIDC trusted publishing)
-        run: npm install -g npm@latest
+      - name: Install npm 11.5+ via corepack (required for OIDC trusted publishing)
+        # `npm install -g npm@latest` is currently broken on ubuntu-24.04's
+        # Node 22 baseline (transitive dep `promise-retry` doesn't link). corepack
+        # is the npm-team-recommended way to pin a specific npm version.
+        run: |
+          corepack enable
+          corepack prepare npm@11.5.1 --activate
+          npm --version
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm -r typecheck
