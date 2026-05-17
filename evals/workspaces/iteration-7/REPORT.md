@@ -9,38 +9,39 @@
 A reviewer (correctly) pointed out that iter-6's design was biased
 against skillpack and didn't measure what a real user would experience:
 
-| Issue (iter-6) | Fix (iter-7) |
-| --- | --- |
-| Used `claude -p --bare`, which **disables** `AGENTS.md` and `.claude/skills/` auto-discovery. Agents had to `ls` / `cat` to find them — that's not how Claude Code is used. | Dropped `--bare`. AGENTS.md auto-loads in the skillpack cell; project-local skills auto-register in the remotion_skill cell. |
-| Skillpack's timing only counted agent time, excluding the scaffold+install step (which **is** the user-facing experience). | Skillpack's total now includes scaffold (`5s`) + install (`12s`) + agent. Apples-to-apples wall-clock. |
-| `upstream_only` had skill files lying loose in the working tree — meaningless because in `--bare` they weren't auto-discovered. | Renamed to `remotion_skill` and put the official Remotion skill at `.claude/skills/remotion-best-practices/` so it auto-registers like a real install. |
-| Renamed `baseline` to `no_skill` for clarity. | Same cell — no skill, no scaffold, agent does everything from scratch. |
+| Issue (iter-6)                                                                                                                                                              | Fix (iter-7)                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Used `claude -p --bare`, which **disables** `AGENTS.md` and `.claude/skills/` auto-discovery. Agents had to `ls` / `cat` to find them — that's not how Claude Code is used. | Dropped `--bare`. AGENTS.md auto-loads in the skillpack cell; project-local skills auto-register in the remotion_skill cell.                           |
+| Skillpack's timing only counted agent time, excluding the scaffold+install step (which **is** the user-facing experience).                                                  | Skillpack's total now includes scaffold (`5s`) + install (`12s`) + agent. Apples-to-apples wall-clock.                                                 |
+| `upstream_only` had skill files lying loose in the working tree — meaningless because in `--bare` they weren't auto-discovered.                                             | Renamed to `remotion_skill` and put the official Remotion skill at `.claude/skills/remotion-best-practices/` so it auto-registers like a real install. |
+| Renamed `baseline` to `no_skill` for clarity.                                                                                                                               | Same cell — no skill, no scaffold, agent does everything from scratch.                                                                                 |
 
 We also added **tool-call counts by type** to the analyzer — this turns
 out to be the most informative metric.
 
 ## Cells
 
-| Cell | Starting state |
-| --- | --- |
-| `no_skill` | Empty `cwd`. No skill, no scaffold. |
+| Cell             | Starting state                                                                                                                                                                                                                    |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `no_skill`       | Empty `cwd`. No skill, no scaffold.                                                                                                                                                                                               |
 | `remotion_skill` | `.claude/skills/remotion-best-practices/` containing the Remotion team's own [`SKILL.md`](https://github.com/remotion-dev/skills/blob/main/skills/remotion/SKILL.md) + its 36-rule reference tree. Claude Code auto-discovers it. |
-| `skillpack` | `skillpack scaffold react remotion` runs first (timed, ~5 s), then `pnpm install` (timed, ~12 s), then the agent runs. AGENTS.md + the skillpack-wrapped Remotion skill auto-load. |
+| `skillpack`      | `skillpack scaffold react remotion` runs first (timed, ~5 s), then `pnpm install` (timed, ~12 s), then the agent runs. AGENTS.md + the skillpack-wrapped Remotion skill auto-load.                                                |
 
 ## Headline numbers (n=3, mean ± stddev)
 
-| Metric | no_skill | remotion_skill | **skillpack** |
-| --- | ---: | ---: | ---: |
-| MP4 success rate | 100% | 100% | 100% |
-| **First-attempt render** | **100%** | **100%** | **100%** |
-| Agent turns | 13 ± 2 | 18 ± 3 | **13 ± 2** |
-| **Tool calls** | 12 ± 2 | 16 ± 3 | **11 ± 2** |
-| Output tokens | 2 794 ± 153 | 3 411 ± 611 | **2 452 ± 779** |
-| **Cost (USD)** | $0.210 ± 0.013 | $0.262 ± 0.028 | **$0.192 ± 0.034** |
-| Agent wall-clock | 140 ± 3 s | 169 ± 6 s | **124 ± 23 s** |
-| Total wall-clock (incl. scaffold+install) | 140 ± 3 s | 170 ± 6 s | 144 ± 23 s |
+| Metric                                    |       no_skill | remotion_skill |      **skillpack** |
+| ----------------------------------------- | -------------: | -------------: | -----------------: |
+| MP4 success rate                          |           100% |           100% |               100% |
+| **First-attempt render**                  |       **100%** |       **100%** |           **100%** |
+| Agent turns                               |         13 ± 2 |         18 ± 3 |         **13 ± 2** |
+| **Tool calls**                            |         12 ± 2 |         16 ± 3 |         **11 ± 2** |
+| Output tokens                             |    2 794 ± 153 |    3 411 ± 611 |    **2 452 ± 779** |
+| **Cost (USD)**                            | $0.210 ± 0.013 | $0.262 ± 0.028 | **$0.192 ± 0.034** |
+| Agent wall-clock                          |      140 ± 3 s |      169 ± 6 s |     **124 ± 23 s** |
+| Total wall-clock (incl. scaffold+install) |      140 ± 3 s |      170 ± 6 s |         144 ± 23 s |
 
 **MP4 artifacts** (canonical trial-1 of each cell, downloadable):
+
 - no_skill → [`no_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/no_skill.mp4) (513 KB)
 - remotion_skill → [`remotion_skill.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/remotion_skill.mp4) (484 KB)
 - skillpack → [`skillpack.mp4`](https://github.com/JoniBR/skillpack/releases/download/v0.1.0-evals-iter7/skillpack.mp4) (541 KB)
@@ -59,8 +60,8 @@ out to be the most informative metric.
 remotion_skill is the most expensive cell on every per-agent metric — the
 agent reads more, writes more, and runs more tools when the skill is
 present in the discoverable-but-not-pre-applied form. The skill content
-is good (it gets to first-render success too), but the *reading
-overhead* exceeds the *setup it saves on this scale of task*.
+is good (it gets to first-render success too), but the _reading
+overhead_ exceeds the _setup it saves on this scale of task_.
 
 ## Tool-call mix is the cleanest evidence
 
@@ -72,8 +73,8 @@ skillpack        Read=4.7, Bash=3.0, Edit=1.3, Skill=1.0, Write=1.0, Glob=0.3
 
 - **no_skill** mostly runs `Bash` (`pnpm init`, `pnpm add ...`, etc.) and
   `Write`s new files. 5.3 file writes — that's the full project structure.
-- **remotion_skill** does the same Bash-heavy setup *plus* `Skill=1.0`
-  (the skill loads) *plus* extra Reads and Edits — net more work.
+- **remotion_skill** does the same Bash-heavy setup _plus_ `Skill=1.0`
+  (the skill loads) _plus_ extra Reads and Edits — net more work.
 - **skillpack** does **0 Bash setup commands**. It Reads (existing
   scaffold files), Edits (Root.tsx + MyVideo.tsx to taste), and
   triggers Skill once for the Remotion skill body. Only 1 Write (the
@@ -94,7 +95,7 @@ which auto-discovers too.
 The interesting comparison: in `remotion_skill` the agent additionally
 reads `upstream/rules/` files (cache-read tokens spike), while in
 `skillpack` the agent sees a tight wrapper SKILL.md saying "the project
-is already set up, only edit these two files" and *doesn't* dive into
+is already set up, only edit these two files" and _doesn't_ dive into
 the rules tree. **That's the AGENTS.md primer earning its keep.**
 
 ## Per-trial breakdown

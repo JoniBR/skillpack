@@ -2,6 +2,7 @@
 """Iter-7 aggregator. Parses stream-json + per-run timing.json files into a
 single summary.json with mean+/-stddev per cell. Also counts tool calls by
 type and validates MP4 existence + first-attempt render success."""
+
 import json
 import re
 import statistics
@@ -64,7 +65,9 @@ def analyze_run(trial: int, cell: str):
                     name = block.get("name", "?")
                     tool_calls[name] = tool_calls.get(name, 0) + 1
                     if name == "Bash":
-                        pending[block.get("id")] = block.get("input", {}).get("command", "")
+                        pending[block.get("id")] = block.get("input", {}).get(
+                            "command", ""
+                        )
                 elif block.get("type") == "tool_result":
                     cmd = pending.pop(block.get("tool_use_id"), None)
                     if cmd and is_render_cmd(cmd):
@@ -98,7 +101,13 @@ def stats(values):
         return {"mean": 0, "stddev": 0, "min": 0, "max": 0, "n": 0}
     mean = statistics.fmean(values)
     sd = statistics.stdev(values) if len(values) > 1 else 0.0
-    return {"mean": mean, "stddev": sd, "min": min(values), "max": max(values), "n": len(values)}
+    return {
+        "mean": mean,
+        "stddev": sd,
+        "min": min(values),
+        "max": max(values),
+        "n": len(values),
+    }
 
 
 def aggregate():
@@ -107,7 +116,9 @@ def aggregate():
     for cell, runs in per_run.items():
         summary[cell] = {
             "n": len(runs),
-            "first_render_success_rate": sum(1 for r in runs if r["first_render_success"])
+            "first_render_success_rate": sum(
+                1 for r in runs if r["first_render_success"]
+            )
             / max(len(runs), 1),
             "mp4_success_rate": sum(1 for r in runs if r["mp4_bytes"] > 50 * 1024)
             / max(len(runs), 1),

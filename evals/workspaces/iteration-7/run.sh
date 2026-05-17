@@ -30,33 +30,33 @@ scaffold_ms=0
 install_ms=0
 
 case "$CELL" in
-  no_skill)
-    # Empty cwd. No skill files. Agent does literally everything.
-    ;;
-  remotion_skill)
-    # cwd contains ONLY the Remotion team's official skill, project-local at
-    # .claude/skills/remotion-best-practices/. Claude Code auto-discovers it.
-    mkdir -p "$CELL_DIR/.claude/skills/remotion-best-practices"
-    cp "$UPSTREAM_SKILL_DIR/SKILL.md" "$CELL_DIR/.claude/skills/remotion-best-practices/SKILL.md"
-    cp -r "$UPSTREAM_SKILL_DIR/rules" "$CELL_DIR/.claude/skills/remotion-best-practices/rules"
-    ;;
-  skillpack)
-    # Time INCLUDES the scaffold + install — that's the user-facing experience.
-    T_scaffold_start=$(now_ms)
-    node "$SKILLPACK_CLI" scaffold react remotion \
-      --into "$CELL_DIR" --no-install --host both --force >/dev/null
-    T_scaffold_end=$(now_ms)
-    scaffold_ms=$((T_scaffold_end - T_scaffold_start))
+no_skill)
+  # Empty cwd. No skill files. Agent does literally everything.
+  ;;
+remotion_skill)
+  # cwd contains ONLY the Remotion team's official skill, project-local at
+  # .claude/skills/remotion-best-practices/. Claude Code auto-discovers it.
+  mkdir -p "$CELL_DIR/.claude/skills/remotion-best-practices"
+  cp "$UPSTREAM_SKILL_DIR/SKILL.md" "$CELL_DIR/.claude/skills/remotion-best-practices/SKILL.md"
+  cp -r "$UPSTREAM_SKILL_DIR/rules" "$CELL_DIR/.claude/skills/remotion-best-practices/rules"
+  ;;
+skillpack)
+  # Time INCLUDES the scaffold + install — that's the user-facing experience.
+  T_scaffold_start=$(now_ms)
+  node "$SKILLPACK_CLI" scaffold react remotion \
+    --into "$CELL_DIR" --no-install --host both --force >/dev/null
+  T_scaffold_end=$(now_ms)
+  scaffold_ms=$((T_scaffold_end - T_scaffold_start))
 
-    T_install_start=$(now_ms)
-    (cd "$CELL_DIR" && pnpm --ignore-workspace install >/dev/null 2>&1)
-    T_install_end=$(now_ms)
-    install_ms=$((T_install_end - T_install_start))
-    ;;
-  *)
-    echo "Unknown cell: $CELL" >&2
-    exit 2
-    ;;
+  T_install_start=$(now_ms)
+  (cd "$CELL_DIR" && pnpm --ignore-workspace install >/dev/null 2>&1)
+  T_install_end=$(now_ms)
+  install_ms=$((T_install_end - T_install_start))
+  ;;
+*)
+  echo "Unknown cell: $CELL" >&2
+  exit 2
+  ;;
 esac
 
 T_agent_start=$(now_ms)
@@ -69,8 +69,8 @@ T_agent_start=$(now_ms)
     --output-format=stream-json --verbose \
     --model "$MODEL" \
     --add-dir "$CELL_DIR" \
-    > "$STREAM_JSONL" 2> "$EVAL_ROOT/trial-$TRIAL.$CELL.stderr" \
-    || true
+    >"$STREAM_JSONL" 2>"$EVAL_ROOT/trial-$TRIAL.$CELL.stderr" ||
+    true
 )
 T_agent_end=$(now_ms)
 agent_ms=$((T_agent_end - T_agent_start))
@@ -82,7 +82,7 @@ mp4_size=0
 while IFS= read -r p; do
   [ -z "$p" ] && continue
   case "$p" in
-    *node_modules*) continue ;;
+  *node_modules*) continue ;;
   esac
   sz=$(stat -f%z "$p" 2>/dev/null || stat -c%s "$p" 2>/dev/null || echo 0)
   if [ "$sz" -gt "$mp4_size" ]; then
@@ -91,7 +91,7 @@ while IFS= read -r p; do
   fi
 done < <(find "$CELL_DIR" -name "*.mp4" 2>/dev/null)
 
-cat > "$TIMING_JSON" <<EOF
+cat >"$TIMING_JSON" <<EOF
 {
   "trial": $TRIAL,
   "cell": "$CELL",

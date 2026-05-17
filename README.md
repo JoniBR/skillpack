@@ -3,11 +3,11 @@
 > **Skills as code, not docs.** Scaffold a project + curated skills in one
 > command so the agent never has to rediscover the setup or the footguns.
 
-Most agent skills today are documentation: a `SKILL.md` that *tells* the
+Most agent skills today are documentation: a `SKILL.md` that _tells_ the
 agent which package to install, which version to pin, which footgun to
 avoid. skillpack ships the answer instead — a working scaffold with the
-right package versions, the right wiring, the known footguns *already
-fixed in code* — plus a small `SKILL.md` for the parts that genuinely
+right package versions, the right wiring, the known footguns _already
+fixed in code_ — plus a small `SKILL.md` for the parts that genuinely
 need agent judgement.
 
 ```bash
@@ -21,6 +21,44 @@ auto-loads, per-skill bodies that load on demand.
 
 **Status:** v0.x, real evals green. See [`DESIGN.md`](./DESIGN.md) for the
 full design.
+
+---
+
+## When to reach for skillpack
+
+skillpack is built for the case where you point an agent at **one focused
+task** and want it to ship:
+
+- *"Generate a 15-second product reel for our launch tomorrow."*
+- *"Build me a 12-slide investor deck from this outline."*
+- *"Run the cohort retention analysis on this CSV and produce a chart."*
+- *"Scaffold a dashboard that polls this endpoint and graphs the latency."*
+
+For tasks like these, the bottleneck is rarely the task itself — it's
+the **task scaffold**. The agent needs to pick a framework, pin
+compatible versions, dodge the well-known footguns, wire the entrypoints
+the headless tooling expects, and *then* start on the actual work. By
+the time it has, half its turns and a third of its tokens are gone on
+plumbing the user didn't ask about.
+
+skillpack pre-pays that cost as a CLI command. The agent inherits a
+working project and a small, tuned `AGENTS.md` primer, then spends its
+turns on the task. In our eval, that translated to **−27% cost,
+−28% output tokens, and −27% agent wall-clock** vs. the same agent
+starting from the best docs-as-skill alternative — with the same
+first-attempt render success rate.
+
+skillpack is **not** the right tool when:
+
+- The user is iterating on a long-running, multi-feature codebase —
+  scaffold-once doesn't help here; you want a long-lived
+  `CLAUDE.md`/`AGENTS.md` instead.
+- The boilerplate you'd need doesn't exist yet — you can write one with
+  `skillpack-boilerplate-creator` (v0.3), but for a one-off you'll
+  probably just hand-bootstrap.
+- The task is dominated by genuine domain reasoning (e.g. "design our
+  retry policy"), not by setup. skillpack doesn't help with judgement
+  work.
 
 ---
 
@@ -39,11 +77,11 @@ successful headless render to MP4. **3 trials per cell**, fresh-context
   (timed), then `pnpm install` (timed), then the agent. AGENTS.md and the
   skillpack-wrapped Remotion skill auto-load.
 
-| Cell             |   MP4 ✓  | 1st render | Turns | Tools | Output tokens | Cost              | Agent time | Total time |
-| ---------------- | :------: | :--------: | ----: | ----: | ------------: | ----------------: | ---------: | ---------: |
-| no_skill         |   100%   |    100%    |  13±2 |  12±2 |   2 794 ± 153 |  $0.210 ± 0.013   |     140 s  |     140 s  |
-| remotion_skill   |   100%   |    100%    |  18±3 |  16±3 |   3 411 ± 611 |  $0.262 ± 0.028   |     169 s  |     170 s  |
-| **skillpack**    | **100%** |  **100%**  | **13±2** | **11±2** | **2 452 ± 779** | **$0.192 ± 0.034** | **124 s**  |   144 s    |
+| Cell           |  MP4 ✓   | 1st render |    Turns |    Tools |   Output tokens |               Cost | Agent time | Total time |
+| -------------- | :------: | :--------: | -------: | -------: | --------------: | -----------------: | ---------: | ---------: |
+| no_skill       |   100%   |    100%    |     13±2 |     12±2 |     2 794 ± 153 |     $0.210 ± 0.013 |      140 s |      140 s |
+| remotion_skill |   100%   |    100%    |     18±3 |     16±3 |     3 411 ± 611 |     $0.262 ± 0.028 |      169 s |      170 s |
+| **skillpack**  | **100%** |  **100%**  | **13±2** | **11±2** | **2 452 ± 779** | **$0.192 ± 0.034** |  **124 s** |      144 s |
 
 **Skillpack is Pareto-optimal on every per-agent metric**: cheapest
 (−9% vs no_skill, −27% vs remotion_skill), fewest output tokens, fewest
@@ -76,20 +114,20 @@ Full writeup, methodology, per-trial data, caveats:
 
 ## Footgun fixes, shipped as code
 
-A Remotion 4 project that's wired *almost* right will typecheck happily,
+A Remotion 4 project that's wired _almost_ right will typecheck happily,
 run in the dev server happily, and then fail at headless render with
 `Visited "http://localhost:3000/index.html" but got no response` (React 19
 flake) or `this file does not contain registerRoot` (missing entry call) or
 `MyVideo.js doesn't exist` (TS `.js` extension imports that webpack
 doesn't honour).
 
-The official Remotion skill dodges these by *telling* the agent to run
+The official Remotion skill dodges these by _telling_ the agent to run
 `npx create-video`, which happens to pin React 18 and call `registerRoot`
 for you — sidestepping the issues without ever naming them. The fix is
 implicit; the next time `create-video`'s defaults change, the skill
 breaks silently.
 
-skillpack dodges them *explicitly*: the `react/remotion` scaffold's
+skillpack dodges them _explicitly_: the `react/remotion` scaffold's
 [`Root.tsx`](./boilerplates/react/skills/remotion/files/src/video/Root.tsx)
 calls `registerRoot` directly and uses bare imports
 ([commit 8a2154c](https://github.com/JoniBR/skillpack/commit/8a2154c)).

@@ -7,7 +7,7 @@ Build a Remotion video in this working directory that produces a 10-second,
    - "one" from frame 120 to frame 180 (60-frame span)
    - "two" from frame 180 to frame 240
    - "three" from frame 240 to frame 300
-   Each caption should pop in with some easing.
+     Each caption should pop in with some easing.
 
 Verification — all three MUST succeed:
 
