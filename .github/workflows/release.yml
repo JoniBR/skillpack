@@ -19,7 +19,7 @@ on:
 #     Environment: npm-publish    (matches `environment:` below)
 permissions:
   contents: read
-  id-token: write   # required for OIDC token minting
+  id-token: write # required for OIDC token minting
 
 jobs:
   publish:

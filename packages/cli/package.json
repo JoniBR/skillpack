@@ -1,6 +1,6 @@
 {
   "name": "@skill-pack/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold projects + agent skills in one command.",
   "license": "MIT",
   "type": "module",
