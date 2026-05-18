@@ -348,12 +348,12 @@ pnpm test:integration    # tier 2 per-skill (~5–15 min, real pnpm install + fr
 pnpm test:all            # both
 ```
 
-| Tier | What | Files | Cost |
-| --- | --- | --- | --- |
-| **1a Unit** | Pure functions: schema, hash, json-merge, markers, pm, registry, overlay, agents-md, prime, fs-utils | `src/<module>.test.ts` (10 files, 72 tests) | <1 s |
-| **1b CLI integration** | `scaffold` / `prime` / `list` / `skill scaffold` / `boilerplate scaffold` exercised as a library + via subprocess, real fs in tmp dirs | `integration/cli/<cmd>.test.ts` (7 files, 34 tests) | ~5 s |
-| **Meta validators** | Walk repo: every manifest is valid; every SKILL.md has frontmatter; every `upstream/` has VENDOR.md + .vendor-commit + license/NOTICE; every marker target file actually has the marker; `npm pack --dry-run` ships expected files only | `integration/meta/<check>.test.ts` (8 files, 17 dynamic checks) | ~3 s |
-| **2 Per-skill** | End-to-end: scaffold → `pnpm install` → framework verify (Remotion render, Satori og:generate, Slidev build, etc.) | `integration/skills/<combo>.test.ts` (6 files) | 5–15 min |
+| Tier                   | What                                                                                                                                                                                                                                    | Files                                                           | Cost     |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------- |
+| **1a Unit**            | Pure functions: schema, hash, json-merge, markers, pm, registry, overlay, agents-md, prime, fs-utils                                                                                                                                    | `src/<module>.test.ts` (10 files, 72 tests)                     | <1 s     |
+| **1b CLI integration** | `scaffold` / `prime` / `list` / `skill scaffold` / `boilerplate scaffold` exercised as a library + via subprocess, real fs in tmp dirs                                                                                                  | `integration/cli/<cmd>.test.ts` (7 files, 34 tests)             | ~5 s     |
+| **Meta validators**    | Walk repo: every manifest is valid; every SKILL.md has frontmatter; every `upstream/` has VENDOR.md + .vendor-commit + license/NOTICE; every marker target file actually has the marker; `npm pack --dry-run` ships expected files only | `integration/meta/<check>.test.ts` (8 files, 17 dynamic checks) | ~3 s     |
+| **2 Per-skill**        | End-to-end: scaffold → `pnpm install` → framework verify (Remotion render, Satori og:generate, Slidev build, etc.)                                                                                                                      | `integration/skills/<combo>.test.ts` (6 files)                  | 5–15 min |
 
 CI runs tiers 1 + meta on every PR (`pnpm test`). Tier 2 runs on push to
 `main` and on `workflow_dispatch` only (cached Chrome + Playwright keep

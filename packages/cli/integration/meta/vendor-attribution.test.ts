@@ -19,7 +19,11 @@ function findUpstreamDirs(root: string, out: string[] = []): string[] {
     if (entry === 'node_modules' || entry === '.git' || entry === 'dist') continue;
     const p = join(root, entry);
     let st;
-    try { st = statSync(p); } catch { continue; }
+    try {
+      st = statSync(p);
+    } catch {
+      continue;
+    }
     if (!st.isDirectory()) continue;
     if (entry === 'upstream') out.push(p);
     else findUpstreamDirs(p, out);

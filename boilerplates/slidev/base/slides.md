@@ -25,8 +25,8 @@ These are presenter notes. Open the presenter view with `?presenter` or press `P
 -->
 
 ---
-transition: fade-out
----
+
+## transition: fade-out
 
 # What you get
 
@@ -42,8 +42,8 @@ A working Slidev deck wired with the official slidevjs agent skill.
 Read the [official docs](https://sli.dev) for the full feature list.
 
 ---
-layout: default
----
+
+## layout: default
 
 # Code
 
@@ -58,11 +58,11 @@ function greet(name: string): string {
 console.log(greet('Slidev'));
 ```
 
-Use ``` ```ts {1|2-3|all} ``` to reveal lines on click.
+Use ` `ts {1|2-3|all} ``` to reveal lines on click.
 
 ---
-layout: center
----
+
+## layout: center
 
 # Images & media
 
@@ -73,8 +73,10 @@ Drop any image URL — Slidev caches remote assets at build time.
 Local images go in `./public/` and are referenced as `/your-image.png`.
 
 ---
+
 layout: center
 class: text-center
+
 ---
 
 # Thank you!

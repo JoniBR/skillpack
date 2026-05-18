@@ -1,5 +1,52 @@
 # @skill-pack/cli
 
+## 0.4.2
+
+### Patch Changes
+
+- v0.4.2 — full test pyramid + drift fixes uncovered by the new validators.
+
+  **Test infrastructure (155/155 pass + 1 skipped, 8.5 s for the full PR run):**
+
+  | Tier                                           | Files |      Tests |
+  | ---------------------------------------------- | ----: | ---------: |
+  | 1a Unit (`src/*.test.ts`)                      |    10 |         72 |
+  | 1b CLI integration (`integration/cli/`)        |     7 |         34 |
+  | Meta validators (`integration/meta/`)          |     8 | 17 dynamic |
+  | Tier 2 per-skill (`integration/skills/`, slow) |     6 |          6 |
+  - Shared `packages/cli/integration/_helpers.ts` exposes `withTmpDir`,
+    `libScaffold`, `runCli`, `expectFiles`, `fileSize`, `REPO_ROOT`, etc.
+  - Vitest `globalSetup` (`integration/_setup.ts`) stages bundled assets
+    ONCE before any test starts — eliminates the race where `npm pack`'s
+    `prepublishOnly` rewrites `packages/cli/boilerplates/` mid-flight.
+  - Two configs: `vitest.config.ts` (fast: unit + cli + meta) and
+    `vitest.integration.config.ts` (slow: per-skill, `pnpm test:integration`).
+  - New CI `integration` job runs Tier 2 on push to main +
+    `workflow_dispatch`, with cached Remotion Chrome + Playwright browsers.
+
+  **Drift caught by the new meta validators (real bugs, fixed in this release):**
+  - `integrations/claude-code/LICENSE` + `integrations/pi/LICENSE` were
+    missing — added + listed in each `package.json#files` so the npm
+    tarballs ship license text.
+  - `packages/cli/LICENSE` copied into the package dir explicitly.
+  - `boilerplates/react/skills/satori/upstream/LICENSE.md` copied from
+    upstream (nuxt-modules/og-image, MIT).
+  - `boilerplates/slidev/upstream/LICENSE` copied from upstream
+    (slidevjs/slidev, MIT).
+  - `boilerplates/react/skills/remotion/upstream/NOTICE.md` added —
+    upstream (remotion-dev/skills) shipped no LICENSE at the vendored
+    commit; NOTICE documents that explicitly.
+  - `boilerplates/slidev/base/slides.md` got a `<!-- @skillpack:slides -->`
+    marker comment so future slidev skills have an attachment point (the
+    marker-presence meta test requires every boilerplate to have ≥1
+    marker).
+
+  **No API changes.** Pure additive: more tests, fixed authoring drift,
+  LICENSE hygiene. All bundled boilerplates and skills behave identically
+  to v0.4.1 from the user's perspective; the only externally observable
+  difference is that LICENSE text now ships inside each published
+  package's npm tarball.
+
 ## 0.4.1
 
 ### Patch Changes

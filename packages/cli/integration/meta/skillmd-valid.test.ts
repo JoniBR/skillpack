@@ -69,8 +69,10 @@ function parseFrontmatter(text: string): Frontmatter | null {
     const greedy = after.match(/^description:\s*([\s\S]*?)(?:\n[a-zA-Z_][\w-]*:\s|\s*$)/);
     description = (greedy ? greedy[1] : descMatch[1]).trim();
     // Strip surrounding quotes if any
-    if ((description.startsWith('"') && description.endsWith('"')) ||
-        (description.startsWith("'") && description.endsWith("'"))) {
+    if (
+      (description.startsWith('"') && description.endsWith('"')) ||
+      (description.startsWith("'") && description.endsWith("'"))
+    ) {
       description = description.slice(1, -1);
     }
   }
@@ -93,8 +95,8 @@ describe('SKILL.md frontmatter + body', () => {
   // or `vendor/` subtree) keeps whatever shape the upstream maintainer
   // shipped — we don't rewrite their content.
   const isVendored = (p: string): boolean =>
-    p.includes(`${join('boilerplates')}/`) && p.includes(`${join('upstream', 'SKILL.md')}`)
-    || p.includes(`${join('vendor')}/`);
+    (p.includes(`${join('boilerplates')}/`) && p.includes(`${join('upstream', 'SKILL.md')}`)) ||
+    p.includes(`${join('vendor')}/`);
 
   it.each(rows)('$label is well-formed', ({ path }) => {
     expect(existsSync(path)).toBe(true);

@@ -17,8 +17,12 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { REPO_ROOT } from '../_helpers.js';
 
-interface PackEntry { path: string }
-interface PackResult { files: PackEntry[] }
+interface PackEntry {
+  path: string;
+}
+interface PackResult {
+  files: PackEntry[];
+}
 
 function pack(cwd: string): PackResult[] {
   // --ignore-scripts: skip prepublishOnly. Without this, `npm pack`
@@ -84,10 +88,9 @@ describe('npm pack --dry-run hygiene', () => {
       for (const f of files) {
         if (BANNED.some((re) => re.test(f))) offenders.push(f);
       }
-      expect(
-        offenders,
-        `banned files in ${rel} tarball:\n  - ${offenders.join('\n  - ')}`,
-      ).toEqual([]);
+      expect(offenders, `banned files in ${rel} tarball:\n  - ${offenders.join('\n  - ')}`).toEqual(
+        [],
+      );
 
       const missing = requireFiles.filter((rf) => !files.includes(rf));
       expect(
