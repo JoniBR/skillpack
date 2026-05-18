@@ -10,6 +10,8 @@ class: text-center
 transition: slide-left
 ---
 
+<!-- @skillpack:slides skillpack-aware skills can insert deck-wide content above this point; remove only if you don't want skills to inject anything -->
+
 # Welcome to Slidev
 
 Markdown-driven slides for developers — scaffolded by **skillpack**.

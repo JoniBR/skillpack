@@ -1,17 +1,34 @@
 import { defineConfig } from 'vitest/config';
 
-// Vitest config for @skill-pack/cli.
+// Fast test config — runs on every PR.
 //
-// Why this file exists: at prepublish time, `scripts/copy-bundled.mjs` stages
-// the monorepo-root `boilerplates/`, `meta-skills/`, and `vendor/` directories
-// into this package so the published tarball is self-contained. Those dirs
-// contain template `.test.tsx` files (e.g. the React boilerplate's App.test
-// shipped to user projects) that vitest would otherwise try to run here and
-// fail because their runtime deps (react, vite, etc.) aren't installed in
-// the CLI package.
+//   - src/<file>.test.ts                — unit tests
+//   - integration/meta/<file>.test.ts   — cross-cutting validators
+//                                          (walk repo, no install)
+//   - integration/cli/<file>.test.ts    — CLI library/subprocess tests
+//                                          (real fs in tmp, no install)
+//
+// Slow per-skill tests (real `pnpm install` + framework verification)
+// live in `integration/skills/` and run via `pnpm test:integration`
+// instead — see vitest.integration.config.ts.
+//
+// The `exclude` list keeps vitest from descending into the
+// staged-for-publish bundles inside `packages/cli/` (boilerplates/,
+// vendor/, meta-skills/), which contain template *.test.tsx files for
+// user projects.
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**', 'boilerplates/**', 'meta-skills/**', 'vendor/**'],
+    include: [
+      'src/**/*.test.ts',
+      'integration/meta/**/*.test.ts',
+      'integration/cli/**/*.test.ts',
+    ],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      'boilerplates/**',
+      'meta-skills/**',
+      'vendor/**',
+    ],
   },
 });

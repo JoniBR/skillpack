@@ -9,7 +9,8 @@
   },
   "files": [
     "commands/**/*",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "lint": "echo \"(lint: no-op)\"",

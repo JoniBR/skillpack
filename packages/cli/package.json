@@ -26,8 +26,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && node ./scripts/post-build.mjs",
     "dev": "tsc -p tsconfig.json --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:all": "pnpm test && pnpm test:integration",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "echo \"(lint: no-op for v0.1)\"",
     "prepublishOnly": "node ./scripts/copy-bundled.mjs && pnpm build"
