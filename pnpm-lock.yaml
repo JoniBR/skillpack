@@ -25,7 +25,11 @@ importers:
 
   integrations/pi: {}
 
+  meta-skills/boilerplate-creator: {}
+
   meta-skills/skill-creator: {}
+
+  meta-skills/skill-migrator: {}
 
   packages/cli:
     dependencies:

@@ -3,6 +3,16 @@
 > **Skills as code, not docs.** Scaffold a project + curated skills in one
 > command so the agent never has to rediscover the setup or the footguns.
 
+> ⚠️ **POC, not a maintained tool.** I built skillpack to test whether
+> agent skills work better as scaffolded code than as documentation. The
+> [accompanying post](https://yonibraslaver.pages.dev/posts/skills-as-code/),
+> the [iter-7 eval](./evals/workspaces/iteration-7/REPORT.md), and the
+> design notes are the real artefact. The CLI works and the eval is
+> reproducible — but I'm not actively maintaining or supporting it. If
+> you want to take it forward,
+> [open an issue](https://github.com/JoniBR/skillpack/issues) and I'll
+> happily hand over context.
+
 Most agent skills today are documentation: a `SKILL.md` that _tells_ the
 agent which package to install, which version to pin, which footgun to
 avoid. skillpack ships the answer instead — a working scaffold with the
@@ -173,15 +183,15 @@ How:
 
 ## Installation
 
-> v0.1 not yet published. Once released:
+All three packages are on npm; install whichever surface you prefer.
 
 ```bash
 # Standalone CLI
-pnpm add -g skillpack         # or npm / yarn / bun — auto-detected at scaffold
+pnpm add -g @skill-pack/cli   # or npm / yarn / bun — auto-detected at scaffold
 
 # Claude Code plugin
 /plugin marketplace add github.com/JoniBR/skillpack
-/plugin install skillpack
+/plugin install skill-pack
 
 # pi extension
 pi extension add @skill-pack/pi
@@ -231,17 +241,6 @@ parent agent's history.
 skillpack list boilerplates
 skillpack list skills react
 ```
-
-### Lifecycle (v0.6)
-
-```bash
-skillpack add tanstack-query        # add a skill to an already-scaffolded project
-skillpack remove recharts           # reverse the safe parts; print a checklist for the rest
-skillpack upgrade --detect          # warn when project's recorded versions are stale
-```
-
-All lifecycle commands require a clean git tree (`--force` overrides). The
-initial scaffold's `git init` provides this for free.
 
 ## How a generated project looks
 
@@ -359,52 +358,24 @@ CI runs tiers 1 + meta on every PR (`pnpm test`). Tier 2 runs on push to
 `main` and on `workflow_dispatch` only (cached Chrome + Playwright keep
 it reasonable). See `.github/workflows/ci.yml`.
 
-## Roadmap
+## What's actually shipped
 
-**Shipped**
+The repo at HEAD has:
 
-- **v0.1** — CLI (`scaffold`, `prime`, `list`); `react` boilerplate with
-  the `remotion` skill; vendored eval harness; `skill-creator` meta-skill;
-  both host integrations; first bundle eval (−0 turns, all green).
-- **v0.2** — npm release pipeline (changesets + OIDC trusted publishing);
-  CI; first public `@skill-pack/cli`, `@skill-pack/pi`, `@skill-pack/claude-plugin`
-  on the registry; three-way eval (n=3) with downloadable MP4 artefacts.
-- **v0.3** — `recharts` + `satori` skills under `react`; `slidev` as a new
-  boilerplate (with the official slidevjs skill vendored); scaffolder
-  copies boilerplate-level `upstream/` aux dirs by default; full eval
-  bundle composition story (`/skillpack react remotion recharts satori`).
+- **CLI** — `scaffold`, `prime`, `list`, `skill scaffold`,
+  `boilerplate scaffold`.
+- **Boilerplates** — `react`, `slidev`.
+- **`react` skills** — `remotion`, `recharts`, `satori`.
+- **Meta-skills** — `skill-creator`, `skill-migrator`, `boilerplate-creator`.
+- **Eval harness** — vendored fork of Anthropic's `skill-creator` Python
+  scripts; the iter-7 three-way eval that produced the headline numbers
+  above lives at `evals/workspaces/iteration-7/`.
+- **Tests** — 155 unit + CLI-integration + meta-validator tests, plus
+  optional per-skill end-to-end tests (`pnpm test:integration`).
 
-**Next**
-
-- **v0.4 — community-authoring v1** _(in progress)_. Ship the missing
-  meta-skills so anyone can author skills + boilerplates locally without
-  forking this repo:
-  - `skill-migrator` meta-skill — convert an existing general SKILL.md
-    into a skillpack skill (LLM-driven inference).
-  - `boilerplate-creator` meta-skill — author a new boilerplate from
-    scratch, with smoke-test acceptance criteria.
-  - **Overlay registry** at `~/.skill-pack/{boilerplates,skills}/` —
-    user-authored skills auto-merge with bundled at scaffold time; the
-    `list` commands now show source (`bundled` / `overlay`).
-  - `skillpack boilerplate scaffold --name <bp>` CLI command — creates the
-    boilerplate skeleton at the overlay location.
-- **v0.5 — sharing v1**. `skillpack publish <skill>` packages a skill
-  and walks the author through publishing to GitHub (with the
-  `skillpack-skill` topic for zero-infra discovery) or npm under their
-  scope. `skillpack add github:user/repo` installs from GitHub via degit.
-  Light gallery: linked from this README to
-  [`github.com/topics/skillpack-skill`](https://github.com/topics/skillpack-skill).
-- **v0.6 — lifecycle commands**. `skillpack add` / `remove` /
-  `upgrade --detect` (DESIGN.md Q14). Lands after the sharing flow
-  exists, because that's when "scaffold lean, add as needed" actually
-  has community skills to add.
-- **v0.7+ — more bundled boilerplates**. `nextjs` (unlocks `auth`,
-  `prisma`, `stripe`, `resend` skills), `vite-vanilla-ts`,
-  `astro`.
-- **Phase 2** — curated remote registry alongside the GitHub topic;
-  TypeScript port of the vendored Anthropic eval scripts; real
-  `skillpack upgrade` with diff-and-reapply; schema migrations as needed;
-  signed / sandboxed community `setup.ts`.
+Lifecycle commands (`add` / `remove` / `upgrade`) and additional
+boilerplates (`nextjs`, `vite`, `astro`) are sketched in `DESIGN.md` but
+were out of scope for the POC.
 
 ## License
 
